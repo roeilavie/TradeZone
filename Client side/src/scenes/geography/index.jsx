@@ -3,7 +3,7 @@ import GeoMap from "../../components/GeoMap";
 import Header from "../../components/Header";
 import { tokens } from "../../theme";
 import { api_production } from "../../service/service";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import MultipleSelect from "../../components/MultipleSelect";
 import { CONST_CATEGORY } from "../../data/ConstVariables";
 import { useContext } from "react";
@@ -24,9 +24,24 @@ const Geography = () => {
   } = useContext(ChartsContext);
   let yearInterval = 1990;
   const interval = useRef();
+  const [text, setText] = useState("Start Animation");
+
+  //When we leave the page, the interval stops
+  useEffect(() => {
+    return () => {
+      clearInterval(interval.current);
+    };
+  }, []);
 
   //Start the animation over the years
   const handleAnimation = () => {
+    if (text === "Stop Animation") {
+      clearInterval(interval.current);
+      setText("Start Animation");
+      return;
+    }
+
+    setText("Stop Animation");
     setYearGeoChart(1990);
     interval.current = setInterval(() => {
       yearInterval++;
@@ -129,7 +144,7 @@ const Geography = () => {
             cursor: "pointer",
           }}
         >
-          Start animation
+          {text}
         </Button>
       </Box>
       <Slider
@@ -141,7 +156,10 @@ const Geography = () => {
         max={2021}
         valueLabelDisplay="on"
         onChange={(event) => setYearGeoChart(event.target.value)}
-        onClick={() => clearInterval(interval.current)}
+        onClick={() => {
+          clearInterval(interval.current);
+          setText("Start Animation");
+        }}
         style={{
           position: "absolute",
           color: colors.greenAccent[300],

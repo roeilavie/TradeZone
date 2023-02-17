@@ -5,17 +5,10 @@ import Header from "../../components/Header";
 const News = () => {
   useEffect(() => {
     const url =
-      "https://reuters-business-and-financial-news.p.rapidapi.com/article-date/01-04-2021";
-
-    const options = {
+      "https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=baa59cfa2f64449ab76cf4d1b718714f";
+    fetch(url, {
       method: "GET",
-      headers: {
-        "X-RapidAPI-Key": "2bc871f75dmsh2663209cc5cb965p1bf706jsne56a67f1d95d",
-        "X-RapidAPI-Host": "reuters-business-and-financial-news.p.rapidapi.com",
-      },
-    };
-
-    fetch(url, options)
+    })
       .then((res) => res.json())
       .then((json) => console.log(json))
       .catch((err) => console.error("error:" + err));
