@@ -1,19 +1,13 @@
 import { Box, IconButton } from "@mui/material";
 import { useContext } from "react";
-import { tokens } from "../../theme";
-import InputBase from "@mui/material/InputBase";
-import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
-import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
-import SearchIcon from "@mui/icons-material/Search";
 import LoginIcon from "@mui/icons-material/Login";
 import { useNavigate } from "react-router-dom"; // import useHistory
 import { ChartsContext } from "./Context";
 
 const Topbar = () => {
-  const colors = tokens();
   const navigate = useNavigate(); // get history from react-router
   const { setUserLogged } = useContext(ChartsContext);
   const login = () => {

@@ -137,6 +137,7 @@ body,
   transition: 0.3s;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .article:hover{

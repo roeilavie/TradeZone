@@ -1,3 +1,5 @@
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+
 export default function NewsItem({ item }) {
   const websiteUrl = item.url;
   const website = websiteUrl.split("https://").pop().split("/")[0];
@@ -6,10 +8,12 @@ export default function NewsItem({ item }) {
   const formatTime = formatDate.replace("Z", "");
 
   return (
-    <a href={item.url} className="article" target="_blank">
-      <div className="article-image">
-        <img src={item.urlToImage} alt={item.title} />
-      </div>
+    <div className="article">
+      <a href={item.url} target="_blank">
+        <div className="article-image">
+          <img src={item.urlToImage} alt={item.title} />
+        </div>
+      </a>
       <div className="article-content">
         <div className="article-source">
           <img
@@ -17,6 +21,9 @@ export default function NewsItem({ item }) {
             alt={item.source.id}
           />
           <span>{item.source.name}</span>
+          <span style={{ position: "absolute", right: 10, cursor: "pointer" }}>
+            <FavoriteBorderIcon />
+          </span>
         </div>
         <div className="article-title">
           <h2>{item.title}</h2>
@@ -29,6 +36,6 @@ export default function NewsItem({ item }) {
           </small>
         </div>
       </div>
-    </a>
+    </div>
   );
 }
