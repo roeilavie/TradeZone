@@ -23,10 +23,12 @@ namespace Server_side.Controllers
         }
 
         // POST api/<controller>
-        //public User Post([FromBody] User user)
-        //{
-        //    return user.Add();
-        //}
+        [HttpPost]
+        public int AddUser([FromBody] User user,string pwd)
+        {
+            user.Pwd = pwd;
+            return user.InsertUser();
+        }
 
         // PUT api/<controller>/5
         public void Put(int id, [FromBody] string value)

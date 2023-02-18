@@ -44,11 +44,11 @@ namespace Server_side.Models
         public string Last_name { get => last_name; set => last_name = value; }
 
 
-        //public User Add()
-        //{
-        //    return DBservices.AddUser(this);
+        public int InsertUser()
+        {
+            return DBservices.InsertUser(this);
 
-        //}
+        }
 
         public User GetLoginUser()
         {

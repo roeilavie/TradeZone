@@ -12,6 +12,7 @@ import { api_production, validateEmail } from "../service/service";
 import { ChartsContext } from "../scenes/global/Context";
 import { useNavigate } from "react-router-dom"; // import useHistory
 import SignWithGoogle from "./SignWithGoogle";
+import { getUser } from "../data/ServiceFunctions";
 
 export default function Login() {
   const navigate = useNavigate(); // get history from react-router
@@ -41,34 +42,14 @@ export default function Login() {
         if (result.isConfirmed) {
           // User clicked the confirm button
           // You can perform the delete operation here
+         
         }
       });
       return;
     }
 
-    //If all the inputs are valid, then we will try to get the user from DB.
-    console.log("Email is: " + values.email, "Password is: " + values.password);
-
-    const url = `${api_production}/Users`;
-    //let bla = `?email=${values.email}&pwd=${values.password}`;
-    let user = {
-      Email: values.email,
-      Pwd: values.password,
-    };
-    fetch(url, {
-      method: "POST",
-      body: JSON.stringify(user),
-      headers: new Headers({
-        "Content-Type": "application/json; charset=UTF-8",
-        Accept: "application/json; charset=UTF-8",
-      }),
-    })
-      .then((res) => {
-        return res.json();
-      })
-      .then(
-        (user) => {
-          //Checking if the user is not null, if not he will be passed to the dashboard.
+    getUser(values)
+        .then((user) => {
           if (user == null) {
             Swal.fire({
               icon: "info",
@@ -83,6 +64,7 @@ export default function Login() {
               }
             });
           } else {
+            console.log(user);
             setUserLogged({
               FirstName: user.First_name,
               Email: user.Email,
@@ -94,19 +76,10 @@ export default function Login() {
             let dashboard = () => navigate("/");
             dashboard();
           }
-
-          //Check what is the
-          // setUserLogged({
-          //   FirstName: user.First_name,
-          //   Email: user.Email,
-          //   LastName: user.Last_name,
-          // });
-          // console.log(userLogged.FirstName);
-        },
-        (error) => {
-          console.log("err post=", error);
-        }
-      );
+        })
+        .catch((error) => {
+          console.error(error);
+        });
   };
 
   const initialValues = {
@@ -133,7 +106,6 @@ export default function Login() {
                 label="Email"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                // onMouseLeave={validateEmail}
                 value={values.email}
                 onKeyUp={checkKeyUp}
                 name="email"
@@ -147,15 +119,6 @@ export default function Login() {
                 }
               />
             </Box>
-
-            {/* If the email is not valid after onMouseLeave so we will show this component. */}
-            {/* {!!values.email && validEmail === false && (
-              <Stack sx={{ width: "100%" }} spacing={2}>
-                <Alert variant="outlined" severity="warning">
-                  Please enter a valid email address
-                </Alert>
-              </Stack>
-            )} */}
 
             <br />
             <br />
@@ -197,6 +160,9 @@ export default function Login() {
           </form>
         )}
       </Formik>
+      {(!validEmail) && (
+      <script>{`document.getElementById('email').focus();`}</script>
+    )}
          
     </Box>
   );
