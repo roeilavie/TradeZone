@@ -6,7 +6,6 @@ import Dashboard from "./scenes/dashboard";
 import Audit from "./scenes/audit";
 import Contacts from "./scenes/contacts";
 import Bar from "./scenes/bar";
-import Form from "./scenes/form";
 import News from "./scenes/news";
 import Line from "./scenes/line";
 import Pie from "./scenes/pie";
@@ -17,11 +16,12 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { useMode } from "./theme";
 import Context from "./scenes/global/Context";
 import Login from "./components/Login";
+import Register from "./components/Register";
+
 
 function App() {
   const [theme] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);
-
   return (
     <ThemeProvider theme={theme}>
       <Context>
@@ -35,7 +35,7 @@ function App() {
               <Route path="/audit" element={<Audit />} />
               <Route path="/news" element={<News />} />
               <Route path="/contacts" element={<Contacts />} />
-              <Route path="/form" element={<Form />} />
+              <Route path="/register" element={<Register />} />
               <Route path="/bar" element={<Bar />} />
               <Route path="/pie" element={<Pie />} />
               <Route path="/line" element={<Line />} />

@@ -664,6 +664,33 @@ namespace Server_side.Models
             command.CommandTimeout = 10; // in seconds
             return command;
         }
+
+        //Insert user to DB
+        public static int IsEmailExist(string email)
+        {
+            SqlConnection con = Connect();
+            SqlCommand command;
+            command = CreateCheckEmailExist(con, email);
+            int result = 0;
+            object obj = command.ExecuteScalar();
+            if (obj != null && obj != DBNull.Value)
+            {
+                result = (int)obj;
+            }
+            con.Close();
+            return result;
+        }
+        //Create insert user command
+        private static SqlCommand CreateCheckEmailExist(SqlConnection con, string email)
+        {
+            SqlCommand command = new SqlCommand();
+            command.Parameters.AddWithValue("@email", email);
+            command.CommandText = "spIsExistEmail";
+            command.Connection = con;
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.CommandTimeout = 10; // in seconds
+            return command;
+        }
         //Create command for user login
         private static SqlCommand CreateCommand(SqlConnection con, User u)
         {

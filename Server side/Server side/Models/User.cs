@@ -54,5 +54,10 @@ namespace Server_side.Models
         {
             return DBservices.GetLoginUser(this);
         }
+
+        public int IsEmailExist(string email)
+        {
+            return DBservices.IsEmailExist(email);
+        }
     }
 }

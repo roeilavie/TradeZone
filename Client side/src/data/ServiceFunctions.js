@@ -1,5 +1,7 @@
 // get all the countries
+import { useNavigate } from "react-router-dom";
 import { api_production } from "../service/service";
+
 export const getCountries = () => {
   return new Promise((resolve, reject) => {
     fetch(`${api_production}/Countries`, {
@@ -106,6 +108,28 @@ export const insertUser = (values) =>{
     fetch(url, {
       method: "POST",
       body: JSON.stringify(user),
+      headers: new Headers({
+        "Content-Type": "application/json; charset=UTF-8",
+        Accept: "application/json; charset=UTF-8",
+      }),
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((result) => {
+        resolve(result);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+  });
+}
+
+export const checkEmailExist = (email) =>{
+  const url = `${api_production}/Users?email=${email}`;
+  return new Promise((resolve,reject) =>{
+    fetch(url, {
+      method: "GET",
       headers: new Headers({
         "Content-Type": "application/json; charset=UTF-8",
         Accept: "application/json; charset=UTF-8",

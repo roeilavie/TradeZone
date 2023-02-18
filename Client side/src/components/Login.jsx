@@ -89,7 +89,7 @@ export default function Login() {
 
   return (
     <Box m="20px">
-      <Header title="Sign in" subtitle="Sign in to your account" />
+      <Header title="Sign in" underline="click me" subtitle="didn't sign up yet? " onClick={register}/>
       <Formik onSubmit={handleFormSubmit} initialValues={initialValues}>
         {({ handleBlur, values, handleSubmit, handleChange }) => (
           <form onSubmit={handleSubmit}>

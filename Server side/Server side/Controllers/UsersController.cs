@@ -16,11 +16,6 @@ namespace Server_side.Controllers
             return new string[] { "value1", "value2" };
         }
 
-        // GET api/<controller>/5
-        public string Get(int id)
-        {
-            return "value";
-        }
 
         // POST api/<controller>
         [HttpPost]
@@ -51,6 +46,12 @@ namespace Server_side.Controllers
         public User POST([FromBody] User user)
         {
             return user.GetLoginUser();
+        }
+        
+        public int Get(string email)
+        {
+            User u = new User();
+            return u.IsEmailExist(email);
         }
     }
 }

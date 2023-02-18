@@ -39,7 +39,6 @@ const Dashboard = () => {
       //Get all countries for the boxes details.
       getCountries()
         .then((countries) => {
-          console.log(countries);
           setNumOfCountries(countries.length);
         })
         .catch((error) => {
@@ -168,7 +167,6 @@ const Dashboard = () => {
       })
       .then(
         (result) => {
-          console.log(result[0].Sum, result);
           let min = result[0].Sum;
           let max = 0;
           let newData = result.map((c, index) => {

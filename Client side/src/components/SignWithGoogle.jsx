@@ -23,40 +23,21 @@ export default function SignWithGoogle() {
         //Check if the user exist in our DB.
         getUser(userObj).then((returnedUser) => {
           if (returnedUser == null) {
-            Swal.fire({
-              icon: "info",
-              title: "Not registered user",
-              text: "You are not registered, press Ok to sign up with google.",
-              showCancelButton: true,
-              confirmButtonColor: "#3085d6",
-              cancelButtonColor: "#d33",
-            }).then((result) => {
-              // if the user press ok then we add the user to the DB.
-              if (result.isConfirmed) {
-                //Insert to DB the user.
-                console.log("im here");
-                console.log(user);
-                //Using service function to insert user to DB.
-                insertUser(user).then((result) => {
-                  result == 1 ? dashboard(): console.log("Failed to register");
-                });  
-              }
-              else{
-                console.log("you need to log in");
+            insertUser(user).then((result) => {
+              if (result == 1) {
+                console.log("Added successfully");
               }
             });
-          } else {
-            setUserLogged({
-              FirstName: user.given_name,
-              Email: user.email,
-              LastName: user.family_name,
-              IsLogged: true,
-              Image:user.picture
-            });
-            dashboard();
           }
+          setUserLogged({
+            FirstName: user.given_name,
+            Email: user.email,
+            LastName: user.family_name,
+            IsLogged: true,
+            Image: user.picture,
+          });
+          dashboard();
         });
-
       }}
       onError={() => {
         console.log("Not authorized");
