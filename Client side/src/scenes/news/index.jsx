@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
 import Header from "../../components/Header";
-import Menu from "../../components/Manu";
+import Menu from "../../components/Menu";
 import NewsGrid from "../../components/NewsGrid";
 
 const News = () => {

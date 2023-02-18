@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap");
 
+
 html,
 body,
 #root,
@@ -76,15 +77,17 @@ body,
 }
 
 
-.manu-ul {
+.menu-ul {
   display: flex;
-  justify-content:space-evenly;
+  flex-direction:row;
+  flex-wrap:wrap;
+  justify-content: center; 
   list-style-type: none;
   font-weight: bold;
   text-transform: uppercase;
 }
 
-.manu-ul li {
+.menu-ul li{
   margin: 2em;
   font-size: 1.2em;
   padding: 0.5em 1em;
@@ -95,19 +98,19 @@ body,
 }
 
 
-.manu-ul .inactive{
+.menu-ul .inactive{
   background: #2e7c67;
 }
 
-.manu-ul .inactive:hover{
+.menu-ul .inactive:hover{
   background: #141b2d;
 }
 
-.manu-ul .active{
+.menu-ul .active{
   background: #4cceac;
 }
 
-.manu-ul .active:hover{
+.menu-ul .active:hover{
   background: #141b2d;
 }
 
@@ -185,6 +188,10 @@ body,
   color: #555;
 }
 
+.menu-icon{
+  display: none;
+}
+
 @media screen and (max-width: 1400px) {
   html{
     font-size: 14px;
@@ -197,6 +204,55 @@ body,
 @media screen and (max-width: 1220px) {
   .news-grid{
     grid-template-columns: 1fr;
+  }
+}
+
+
+@media screen and (max-width: 768px) {
+  .menu-ul {
+    display: none;
+  }
+
+  .menu-open{
+    display: block;
+    list-style-type: none;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  .menu-open li{
+    margin: 2em;
+    font-size: 1.2em;
+    padding: 0.5em 1em;
+    background: "#eee";
+    border-radius: 0.5em;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .menu-icon {
+    display: block;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+
+
+.menu-open .inactive{
+    background: #2e7c67;
+  }
+  
+.menu-open .inactive:hover{
+    background: #141b2d;
+  }
+  
+.menu-open .active{
+    background: #4cceac;
+  }
+
+.menu-open .active:hover{
+    background: #141b2d;
   }
 }
 

@@ -1,4 +1,20 @@
+import { useEffect, useState } from "react";
+
 export default function Manu({ active, setActive, setCategory }) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMenuOpen(window.innerWidth <= 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   const links = [
     { id: 1, name: "General", value: "general" },
     { id: 2, name: "Business", value: "business" },
@@ -15,7 +31,13 @@ export default function Manu({ active, setActive, setCategory }) {
   };
   return (
     <nav>
-      <ul className="manu-ul">
+      <div
+        className="menu-icon"
+        onClick={() => setIsMenuOpen((prevIsMenuOpen) => !prevIsMenuOpen)}
+      >
+        &#9776; Categories
+      </div>
+      <ul className={isMenuOpen ? "menu-open" : "menu-ul"}>
         {links.map((link) => (
           <li
             key={link.id}
