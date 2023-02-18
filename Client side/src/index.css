@@ -219,6 +219,7 @@ body,
     list-style-type: none;
     font-weight: bold;
     text-transform: uppercase;
+    text-align: -webkit-center;
   }
 
   .menu-open li{
@@ -229,6 +230,7 @@ body,
     border-radius: 0.5em;
     cursor: pointer;
     transition: 0.3s;
+    width: 65%;
   }
 
   .menu-icon {
