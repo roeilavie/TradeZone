@@ -639,6 +639,58 @@ namespace Server_side.Models
             con.Close();
             return userLogged;
         }
+
+        //Insert user to DB
+        public static int InsertUser(User u)
+        {
+            SqlConnection con = Connect();
+            SqlCommand command;
+            command = CreateInsertUserCommand(con, u);
+            int numAffected = command.ExecuteNonQuery();
+            con.Close();
+            return numAffected;
+        }
+        //Create insert user command
+        private static SqlCommand CreateInsertUserCommand(SqlConnection con, User u)
+        {
+            SqlCommand command = new SqlCommand();
+            command.Parameters.AddWithValue("@email", u.Email);
+            command.Parameters.AddWithValue("@pwd", u.Pwd);
+            command.Parameters.AddWithValue("@first_name", u.First_name);
+            command.Parameters.AddWithValue("@last_name", u.Last_name);
+            command.CommandText = "spInsertUser";
+            command.Connection = con;
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.CommandTimeout = 10; // in seconds
+            return command;
+        }
+
+        //Insert user to DB
+        public static int IsEmailExist(string email)
+        {
+            SqlConnection con = Connect();
+            SqlCommand command;
+            command = CreateCheckEmailExist(con, email);
+            int result = 0;
+            object obj = command.ExecuteScalar();
+            if (obj != null && obj != DBNull.Value)
+            {
+                result = (int)obj;
+            }
+            con.Close();
+            return result;
+        }
+        //Create insert user command
+        private static SqlCommand CreateCheckEmailExist(SqlConnection con, string email)
+        {
+            SqlCommand command = new SqlCommand();
+            command.Parameters.AddWithValue("@email", email);
+            command.CommandText = "spIsExistEmail";
+            command.Connection = con;
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.CommandTimeout = 10; // in seconds
+            return command;
+        }
         //Create command for user login
         private static SqlCommand CreateCommand(SqlConnection con, User u)
         {
