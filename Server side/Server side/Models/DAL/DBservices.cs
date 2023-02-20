@@ -38,6 +38,29 @@ namespace Server_side.Models
             return trades;
         }
 
+        public static int DeleteFavorite(int userId, string favUrl)
+        {
+            //First need to check if the favorite already in the DB.
+            SqlConnection con = Connect();
+            SqlCommand command;
+            command = CreateRemoveFavoriteCommand(con, favUrl, userId);
+            int numAffected = command.ExecuteNonQuery();
+            return numAffected;
+        }
+
+        //Adding favorite to user
+        private static SqlCommand CreateRemoveFavoriteCommand(SqlConnection con, string favUrl, int userId)
+        {
+            SqlCommand command = new SqlCommand();
+            command.Parameters.AddWithValue("@userID", userId);   
+            command.Parameters.AddWithValue("@favoriteUrl", favUrl);
+            command.CommandText = "spDeleteFavorite";
+            command.Connection = con;
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.CommandTimeout = 10; // in seconds
+            return command;
+        }
+
         // Read Top 10 trades
         public static List<Trade> ReadTop10Trades()
         {
@@ -61,6 +84,55 @@ namespace Server_side.Models
 
             con.Close();
             return trades;
+        }
+
+        public static int AddFavoriteToUser(Favorite favorite, int userId)
+        {
+            //First need to check if the favorite already in the DB.
+            SqlConnection con = Connect();
+            SqlCommand command;
+            command = CreateAddFavoriteCommand(con, favorite, userId);
+
+            command.ExecuteNonQuery();
+
+            // check the value of the @Added parameter
+            bool added = (bool)command.Parameters["@Added"].Value;
+            if (added)
+            {
+                // the favorite was added to the user
+                return 1;
+            }
+            else
+            {
+                // the favorite was not added to the user because it already existed for that user
+                return 0;
+            }
+
+        }
+
+        //Adding favorite to user
+        private static SqlCommand CreateAddFavoriteCommand(SqlConnection con, Favorite favorite,int userId)
+        {
+            SqlCommand command = new SqlCommand();
+            command.Parameters.AddWithValue("@userID", userId);
+            command.Parameters.AddWithValue("@author", favorite.Author);
+            command.Parameters.AddWithValue("@content", favorite.Content);
+            command.Parameters.AddWithValue("@desc", favorite.Description);
+            command.Parameters.AddWithValue("@published", favorite.PublishedAt);
+            command.Parameters.AddWithValue("@journal", favorite.Journal);
+            command.Parameters.AddWithValue("@url", favorite.Url);
+            command.Parameters.AddWithValue("@picture", favorite.Picture);
+
+            //Added bit to decide if favorite was added or not.
+            SqlParameter addedParam = new SqlParameter("@Added", SqlDbType.Bit);
+            addedParam.Direction = ParameterDirection.Output;
+            command.Parameters.Add(addedParam);
+
+            command.CommandText = "spInsertFavToUser";
+            command.Connection = con;
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.CommandTimeout = 10; // in seconds
+            return command;
         }
 
         // Top 10 trades command
@@ -632,7 +704,8 @@ namespace Server_side.Models
                 string firstName = dr["FirstName"].ToString();
                 string lastName = dr["LastName"].ToString();
                 string email = dr["Email"].ToString();
-                userLogged = new User(firstName, lastName, email);
+                int userId = int.Parse(dr["UserID"].ToString());
+                userLogged = new User(firstName, lastName, email,userId);
                 break;
             }
 
@@ -665,7 +738,7 @@ namespace Server_side.Models
             return command;
         }
 
-        //Insert user to DB
+        //Check email exist in DB
         public static int IsEmailExist(string email)
         {
             SqlConnection con = Connect();
@@ -680,7 +753,7 @@ namespace Server_side.Models
             con.Close();
             return result;
         }
-        //Create insert user command
+        //Create email exist command
         private static SqlCommand CreateCheckEmailExist(SqlConnection con, string email)
         {
             SqlCommand command = new SqlCommand();
@@ -698,6 +771,34 @@ namespace Server_side.Models
             command.Parameters.AddWithValue("@email", u.Email);
             command.Parameters.AddWithValue("@pwd", u.Pwd);
             command.CommandText = "spGetUserLogin";
+            command.Connection = con;
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.CommandTimeout = 10; // in seconds
+            return command;
+        }
+
+        public static int GetAmountRegistered()
+        {       
+            SqlConnection con = Connect();
+            SqlCommand command;
+            command = CreateGetAmountRegisteredCommand(con);
+            SqlDataReader dr = command.ExecuteReader(CommandBehavior.CloseConnection);
+            int usersRegistered = 0;
+
+            while (dr.Read())
+            {
+                usersRegistered = int.Parse(dr["amountRegistered"].ToString());
+                break;
+            }
+            con.Close();
+            return usersRegistered;
+        }
+
+        //Create insert user command
+        private static SqlCommand CreateGetAmountRegisteredCommand(SqlConnection con)
+        {
+            SqlCommand command = new SqlCommand();
+            command.CommandText = "spGetAmountRegistered";
             command.Connection = con;
             command.CommandType = System.Data.CommandType.StoredProcedure;
             command.CommandTimeout = 10; // in seconds

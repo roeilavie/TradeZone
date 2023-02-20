@@ -1,16 +1,20 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import jwt_decode from "jwt-decode";
 import { useNavigate } from "react-router-dom"; // import useHistory
 import { ChartsContext } from "../scenes/global/Context";
 import { getUser, insertUser } from "../data/ServiceFunctions";
-import Swal from "sweetalert2";
 
 export default function SignWithGoogle() {
-  const { setUserLogged, userLogged } = useContext(ChartsContext);
+  const { setUserLogged, userLogged, amountRegistered, setAmountRegistered } =
+    useContext(ChartsContext);
   const navigate = useNavigate(); // get history from react-router
   const dashboard = () => navigate("/"); // navigate to login page on button click
-  const register = () => navigate("/register"); // Navigate to register page on confirm click swal.
+
+  useEffect(() => {
+    console.log(amountRegistered);
+  }, [amountRegistered])
+  
   return (
     <GoogleLogin
       onSuccess={(credentialResponse) => {
@@ -22,21 +26,40 @@ export default function SignWithGoogle() {
         };
         //Check if the user exist in our DB.
         getUser(userObj).then((returnedUser) => {
+          console.log(returnedUser);
           if (returnedUser == null) {
             insertUser(user).then((result) => {
               if (result == 1) {
                 console.log("Added successfully");
               }
             });
+            let numRegistered = amountRegistered + 1;
+            setAmountRegistered((prev) => prev + 1);
+            console.log(amountRegistered);
+            setUserLogged({
+              UserId: numRegistered,
+              FirstName: user.given_name,
+              Email: user.email,
+              LastName: user.family_name,
+              IsLogged: true,
+              Image: user.picture,
+            });
+            dashboard();
           }
-          setUserLogged({
-            FirstName: user.given_name,
-            Email: user.email,
-            LastName: user.family_name,
-            IsLogged: true,
-            Image: user.picture,
-          });
-          dashboard();
+           else {
+            //The user exist already in our DB, so we will set him as logged.
+            setUserLogged({
+              UserId: returnedUser.UserId,
+              FirstName: returnedUser.First_name,
+              Email: returnedUser.Email,
+              LastName: returnedUser.Last_name,
+              IsLogged: true,
+              Image: user.picture,
+            });
+            console.log(userLogged.UserId);
+            console.log(returnedUser.UserId);
+            dashboard();
+          }
         });
       }}
       onError={() => {

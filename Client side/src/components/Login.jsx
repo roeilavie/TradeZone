@@ -66,6 +66,7 @@ export default function Login() {
           } else {
             console.log(user);
             setUserLogged({
+              UserId:user.UserId,
               FirstName: user.First_name,
               Email: user.Email,
               LastName: user.Last_name,

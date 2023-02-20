@@ -4,7 +4,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "./Header";
 import { ChartsContext } from "../scenes/global/Context";
 
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { validateEmail } from "../service/service";
 import Swal from "sweetalert2";
 import { checkEmailExist, dashboard, insertUser } from "../data/ServiceFunctions";
@@ -19,7 +19,10 @@ export default function Register() {
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const [showPassword, setShowPassword] = useState(false);
   const handleMouseDownPassword = (event) => event.preventDefault();
-  const {setUserLogged} = useContext(ChartsContext);
+  const {setUserLogged,amountRegistered,setAmountRegistered} = useContext(ChartsContext);
+  useEffect(() => {
+    console.log(amountRegistered);
+  }, [amountRegistered])
   const handleFormSubmit = (values) => {
     console.log(values);
     if (!validEmail) {
@@ -36,7 +39,7 @@ export default function Register() {
 
     //We need to make sure the user doesn't exist, we will get the user by email.
     checkEmailExist(values.email).then((result) => {
-      if (result == 1) {
+      if (result != 0) {
         Swal.fire({
           icon: "info",
           title: "Email is already in use",
@@ -47,23 +50,25 @@ export default function Register() {
         });
         return;
       }
-      console.log(result);
-      let user = {
+      let userObj = {
         email: values.email,
         given_name: values.firstName,
         family_name: values.lastName,
         sub:values.password
       };
-      console.log(user);
-      insertUser(user).then((result) => {
-        console.log(user);
+      console.log(userObj);
+      insertUser(userObj).then((result) => {
+        console.log(userObj);
         if(result == 1){
           console.log("registered successfully");
           //Navigate to dashboard after user logged in.
+          let numRegistered = amountRegistered + 1;
+          setAmountRegistered((prev) => prev + 1);
           setUserLogged({
+            UserId:numRegistered,
             FirstName: values.firstName,
-            Email: user.email,
-            LastName: user.lastName,
+            Email: values.email,
+            LastName: values.lastName,
             IsLogged: true,
             Image:
               "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSX1mtYL8f3jCPWwGO9yCiCJlbi8LikmuJMew&usqp=CAU",

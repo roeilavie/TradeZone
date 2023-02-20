@@ -1,4 +1,10 @@
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import { useContext, useState } from "react";
+import { ChartsContext } from "../scenes/global/Context";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import { useNavigate } from "react-router-dom";
+import { insertFavoriteToUser, deleteFavorite } from "../data/ServiceFunctions";
+import Swal from "sweetalert2";
 
 export default function NewsItem({ item }) {
   const websiteUrl = item.url;
@@ -6,7 +12,64 @@ export default function NewsItem({ item }) {
   const date = item.publishedAt;
   const formatDate = date.replace("T", " ");
   const formatTime = formatDate.replace("Z", "");
+  const { userLogged } = useContext(ChartsContext);
+  const addToFavorites = () => {
+    if (!userLogged.IsLogged) {
+      alert("you need to sign in first");
+      return;
+    }
+    setIsClicked(true);
+    console.log(item);
+    //Insert favorites to DB
+    let defaultValue = getNotEmptyValue(
+      item.author,
+      item.Journal,
+      item.source.name
+    );
 
+    let fav = {
+      Author: item.author != "" ? item.author : defaultValue,
+      Content: item.content,
+      Description: item.description,
+      PublishedAt: item.publishedAt,
+      Journal: item.Journal != undefined ? item.Journal : defaultValue,
+      Url: item.url,
+      Picture: item.urlToImage,
+      UserId: userLogged.UserId,
+    };
+    insertFavoriteToUser(fav).then((result) => {
+      console.log(result);
+      if (result == 1) {
+        Swal.fire("Added to favorites successfully!", "success");
+        return;
+      } else {
+        Swal.fire({
+          title: "This article already in your favorites",
+          showClass: {
+            popup: "animate__animated animate__fadeInDown",
+          },
+          hideClass: {
+            popup: "animate__animated animate__fadeOutUp",
+          },
+        });
+        setIsClicked(false);
+      }
+    });
+  };
+
+  const favoriteRemove = () => {
+    //Remove favorites from DB
+    setIsClicked(false);
+    let fav = {
+      Url: item.url,
+      UserId: userLogged.UserId,
+    };
+    console.log(fav);
+    deleteFavorite(fav).then((result) => {
+      console.log(result);
+    });
+  };
+  const [isClicked, setIsClicked] = useState(false);
   return (
     <div className="article">
       <a href={item.url} target="_blank">
@@ -22,7 +85,8 @@ export default function NewsItem({ item }) {
           />
           <span>{item.source.name}</span>
           <span style={{ position: "absolute", right: 10, cursor: "pointer" }}>
-            <FavoriteBorderIcon />
+            {!isClicked && <FavoriteBorderIcon onClick={addToFavorites} />}
+            {isClicked && <FavoriteIcon onClick={favoriteRemove} />}
           </span>
         </div>
         <div className="article-title">
@@ -39,3 +103,9 @@ export default function NewsItem({ item }) {
     </div>
   );
 }
+
+export const getNotEmptyValue = (str1, str2, str3) => {
+  if (str1 != null || str1 != "") return str1;
+  if (str2 != null || str2 != "") return str2;
+  if (str3 != null || str3 != "") return str3;
+};

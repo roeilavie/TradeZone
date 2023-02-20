@@ -17,6 +17,7 @@ import { useMode } from "./theme";
 import Context from "./scenes/global/Context";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import PersonalProfile from "./components/PersonalProfile";
 
 
 function App() {
@@ -43,6 +44,7 @@ function App() {
               <Route path="/geography" element={<Geography />} />
               <Route path="/network" element={<Network />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/personal" element={<PersonalProfile />} />
             </Routes>
           </main>
         </div>
