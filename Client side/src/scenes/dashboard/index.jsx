@@ -220,7 +220,8 @@ const Dashboard = () => {
       >
         {/* ROW 1 */}
         <Box
-          gridColumn="span 3"
+          gridColumn="span 4"
+          borderRadius="10px"
           backgroundColor={colors.primary[400]}
           display="flex"
           alignItems="center"
@@ -237,8 +238,9 @@ const Dashboard = () => {
           />
         </Box>
         <Box
-          gridColumn="span 3"
+          gridColumn="span 4"
           backgroundColor={colors.primary[400]}
+          borderRadius="10px"
           display="flex"
           alignItems="center"
           justifyContent="center"
@@ -254,7 +256,8 @@ const Dashboard = () => {
           />
         </Box>
         <Box
-          gridColumn="span 3"
+          gridColumn="span 4"
+          borderRadius="10px"
           backgroundColor={colors.primary[400]}
           display="flex"
           alignItems="center"
@@ -274,6 +277,7 @@ const Dashboard = () => {
         {/* ROW 2 */}
         <Box
           gridColumn="span 8"
+          borderRadius="10px"
           gridRow="span 2"
           backgroundColor={colors.primary[400]}
         >
@@ -307,6 +311,7 @@ const Dashboard = () => {
         </Box>
         <Box
           gridColumn="span 4"
+          borderRadius="10px"
           gridRow="span 2"
           backgroundColor={colors.primary[400]}
           overflow="auto"
@@ -358,6 +363,7 @@ const Dashboard = () => {
 
         {/* ROW 3 */}
         <Box
+          borderRadius="10px"
           gridColumn="span 6"
           gridRow="span 2"
           backgroundColor={colors.primary[400]}
@@ -374,6 +380,7 @@ const Dashboard = () => {
           </Box>
         </Box>
         <Box
+          borderRadius="10px"
           gridColumn="span 6"
           gridRow="span 2"
           backgroundColor={colors.primary[400]}
