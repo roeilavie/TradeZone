@@ -11,9 +11,10 @@ namespace Server_side.Controllers
     public class FavoritesController : ApiController
     {
         // GET api/<controller>
-        public IEnumerable<string> Get()
+        public List<Favorite> Get(int userId)
         {
-            return new string[] { "value1", "value2" };
+            Favorite fav = new Favorite();
+            return fav.GetAllUserFavorites(userId);
         }
 
         // GET api/<controller>/5

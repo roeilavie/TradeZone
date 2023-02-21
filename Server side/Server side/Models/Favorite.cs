@@ -28,6 +28,17 @@ namespace Server_side.Models
             this.Picture = picture;
         }
 
+        public Favorite(string author, string content, string description, string publishedAt, string journal, string url, string picture)
+        {
+            this.Author = author;
+            this.Content = content;
+            this.Description = description;
+            this.PublishedAt = publishedAt;
+            this.Journal = journal;
+            this.Url = url;
+            this.Picture = picture;
+        }
+
         public Favorite() { }
 
         public int FavId { get => favId; set => favId = value; }
@@ -48,6 +59,11 @@ namespace Server_side.Models
         public int AddFavoriteToUser(int userId)
         {
             return DBservices.AddFavoriteToUser(this, userId);
+        }
+
+        public List<Favorite> GetAllUserFavorites(int userId)
+        {
+            return DBservices.GetAllUserFavorites(userId);
         }
     }
 }

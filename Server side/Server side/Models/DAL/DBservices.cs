@@ -38,6 +38,43 @@ namespace Server_side.Models
             return trades;
         }
 
+        // Create get all favorites command
+        private static SqlCommand CreateCommand(SqlConnection con, int userId)
+        {
+            SqlCommand command = new SqlCommand();
+            command.CommandText = "spGetAllUserFavorites";
+            command.Parameters.AddWithValue("@userId", userId);
+            command.Connection = con;
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.CommandTimeout = 10; // in seconds
+            return command;
+        }
+
+        public static List<Favorite> GetAllUserFavorites(int userId)
+        {
+            SqlConnection con = Connect();
+            SqlCommand command;
+            command = CreateCommand(con, userId);
+            SqlDataReader dr = command.ExecuteReader(CommandBehavior.CloseConnection);
+            List<Favorite> favorites = new List<Favorite>();
+
+            while (dr.Read())
+            {
+                string author = dr["Author"].ToString();
+                string content = dr["Content"].ToString();
+                string description = dr["Description"].ToString();
+                string publishedAt = dr["PublishedAt"].ToString();
+                string journal = dr["Journal"].ToString();
+                string url = dr["Url"].ToString();
+                string picture = dr["Picture"].ToString();
+
+                favorites.Add(new Favorite( author,  content,  description,  publishedAt,  journal,  url,  picture));
+            }
+
+            con.Close();
+            return favorites;
+        }
+        //Delete favorite from DB
         public static int DeleteFavorite(int userId, string favUrl)
         {
             //First need to check if the favorite already in the DB.
@@ -115,6 +152,8 @@ namespace Server_side.Models
         {
             SqlCommand command = new SqlCommand();
             command.Parameters.AddWithValue("@userID", userId);
+            if (favorite.Author == null) favorite.Author = "";
+            if (favorite.Journal == null) favorite.Journal = "";
             command.Parameters.AddWithValue("@author", favorite.Author);
             command.Parameters.AddWithValue("@content", favorite.Content);
             command.Parameters.AddWithValue("@desc", favorite.Description);

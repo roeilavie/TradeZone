@@ -3,16 +3,17 @@ import { useContext, useState } from "react";
 import { ChartsContext } from "../scenes/global/Context";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { useNavigate } from "react-router-dom";
-import { insertFavoriteToUser, deleteFavorite } from "../data/ServiceFunctions";
+import { insertFavoriteToUser,deleteFavorite } from "../data/ServiceFunctions";
 import Swal from "sweetalert2";
 
-export default function NewsItem({ item }) {
+export default function NewsItem({ item, param, defaultClicked, handleFavorites}) {
   const websiteUrl = item.url;
   const website = websiteUrl.split("https://").pop().split("/")[0];
   const date = item.publishedAt;
   const formatDate = date.replace("T", " ");
   const formatTime = formatDate.replace("Z", "");
   const { userLogged } = useContext(ChartsContext);
+  const [isClicked, setIsClicked] = useState(defaultClicked);
   const addToFavorites = () => {
     if (!userLogged.IsLogged) {
       alert("you need to sign in first");
@@ -59,48 +60,57 @@ export default function NewsItem({ item }) {
 
   const favoriteRemove = () => {
     //Remove favorites from DB
-    setIsClicked(false);
+    console.log(defaultClicked);
     let fav = {
       Url: item.url,
       UserId: userLogged.UserId,
     };
-    console.log(fav);
     deleteFavorite(fav).then((result) => {
       console.log(result);
+      Swal.fire("Article removed successfully!", "success");
     });
+    //Handling only if we are on the My favorite component.
+    defaultClicked == false ? setIsClicked(false) : setIsClicked(true);
+    if (defaultClicked == true) {
+      handleFavorites(item.url);
+      return;
+    }
+    
   };
-  const [isClicked, setIsClicked] = useState(false);
+
   return (
-    <div className="article">
-      <a href={item.url} target="_blank">
-        <div className="article-image">
-          <img src={item.urlToImage} alt={item.title} />
-        </div>
-      </a>
-      <div className="article-content">
-        <div className="article-source">
-          <img
-            src={`https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${website}&size=16`}
-            alt={item.source.id}
-          />
-          <span>{item.source.name}</span>
-          <span style={{ position: "absolute", right: 10, cursor: "pointer" }}>
-            {!isClicked && <FavoriteBorderIcon onClick={addToFavorites} />}
-            {isClicked && <FavoriteIcon onClick={favoriteRemove} />}
-          </span>
-        </div>
-        <div className="article-title">
-          <h2>{item.title}</h2>
-        </div>
-        <p>{item.description}</p>
-        <div>
-          <small>
-            <b>Published At: </b>
-            {formatTime}
-          </small>
+      <div className="article">
+        <a href={item.url} target="_blank">
+          <div className="article-image">
+            <img src={item.urlToImage} alt={item.title} />
+          </div>
+        </a>
+        <div className="article-content">
+          <div className="article-source">
+            <img
+              src={`https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${website}&size=16`}
+              // alt={item.source.id != null ? item.source.id : ""}
+            />
+            {/* <span>{item.source.name}</span> */}
+            <span
+              style={{ position: "absolute", right: 10, cursor: "pointer" }}
+            >
+              {!isClicked && <FavoriteBorderIcon onClick={addToFavorites} />}
+              {isClicked && <FavoriteIcon onClick={favoriteRemove} />}
+            </span>
+          </div>
+          <div className="article-title">
+            <h2>{item.title}</h2>
+          </div>
+          <p>{item.description}</p>
+          <div>
+            <small>
+              <b>Published At: </b>
+              {formatTime}
+            </small>
+          </div>
         </div>
       </div>
-    </div>
   );
 }
 

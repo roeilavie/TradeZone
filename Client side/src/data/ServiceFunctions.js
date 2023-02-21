@@ -230,3 +230,29 @@ export const deleteFavorite = (fav) =>{
       })
   });
 } 
+
+// get all the products
+export const getAllUserFavorites = (userId) => {
+  return new Promise((resolve, reject) => {
+    fetch(`${api_production}/Favorites?userId=${userId}`, {
+      method: "GET",
+      headers: new Headers({
+        "Content-Type": "application/json; charset=UTF-8",
+        Accept: "application/json; charset=UTF-8",
+      }),
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((result) => {
+        resolve(result);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
+// export const removeFavorite = () => {
+
+// }
