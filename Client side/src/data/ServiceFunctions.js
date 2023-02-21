@@ -74,7 +74,6 @@ export const getUser = (values) =>{
     Email: values.email,
     Pwd: values.password,
   };
-  console.log(user);
   return new Promise((resolve,reject) => {
     fetch(url, {
       method: "POST",
@@ -180,8 +179,6 @@ export const insertFavoriteToUser = (fav) =>{
     Picture:fav.Picture,
   };
   let userId = fav.UserId;
-  console.log(favorite);
-  console.log("The user ID is: ", userId);
   const url = `${api_production}/Favorites?userId=${userId}`;
   return new Promise((resolve,reject) => {
     fetch(url, {
@@ -205,11 +202,8 @@ export const insertFavoriteToUser = (fav) =>{
 } 
 
 export const deleteFavorite = (fav) =>{
-  console.log(fav);
   let favUrl = fav.Url;
   let userId = fav.UserId;
-  console.log(favUrl);
-  console.log("The user ID is: ", userId);
   const url = `${api_production}/Favorites?userId=${userId}&favUrl=${favUrl}`;
   return new Promise((resolve,reject) => {
     fetch(url, {
@@ -252,7 +246,3 @@ export const getAllUserFavorites = (userId) => {
       });
   });
 };
-
-// export const removeFavorite = () => {
-
-// }

@@ -4,7 +4,6 @@ import { ChartsContext } from "../scenes/global/Context";
 import { getAllUserFavorites } from "../data/ServiceFunctions";
 import { useNavigate } from "react-router-dom";
 import Header from "./Header";
-import Swal from "sweetalert2";
 
 //const url = `https://newsapi.org/v2/top-headlines?country=us&category=${category}&apiKey=baa59cfa2f64449ab76cf4d1b718714f`;
 export default function Favorites() {
@@ -16,7 +15,6 @@ export default function Favorites() {
     if(!userLogged.IsLogged) navigate('/');
     getAllUserFavorites(userLogged.UserId).then((result) =>{
       // Changing prop name using dot notation to match the item format in the NewsGrid component.
-      console.log(result);
       result = changeObjProps(result);
       setItems(result);
     })

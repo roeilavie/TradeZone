@@ -22,7 +22,6 @@ const Topbar = () => {
     navigate("/login");
   }; // navigate to login page on button click
   const myFavorites = () => {
-    console.log("hello");
     navigate("/favorites");
   };
   return (

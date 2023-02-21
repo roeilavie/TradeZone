@@ -20,11 +20,7 @@ export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const handleMouseDownPassword = (event) => event.preventDefault();
   const {setUserLogged,amountRegistered,setAmountRegistered} = useContext(ChartsContext);
-  useEffect(() => {
-    console.log(amountRegistered);
-  }, [amountRegistered])
   const handleFormSubmit = (values) => {
-    console.log(values);
     if (!validEmail) {
       Swal.fire({
         icon: "info",
@@ -56,11 +52,8 @@ export default function Register() {
         family_name: values.lastName,
         sub:values.password
       };
-      console.log(userObj);
       insertUser(userObj).then((result) => {
-        console.log(userObj);
         if(result == 1){
-          console.log("registered successfully");
           //Navigate to dashboard after user logged in.
           let numRegistered = amountRegistered + 1;
           setAmountRegistered((prev) => prev + 1);

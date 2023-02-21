@@ -2,7 +2,6 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useContext, useState } from "react";
 import { ChartsContext } from "../scenes/global/Context";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { useNavigate } from "react-router-dom";
 import { insertFavoriteToUser,deleteFavorite } from "../data/ServiceFunctions";
 import Swal from "sweetalert2";
 
@@ -20,7 +19,6 @@ export default function NewsItem({ item, param, defaultClicked, handleFavorites}
       return;
     }
     setIsClicked(true);
-    console.log(item);
     //Insert favorites to DB
     let defaultValue = getNotEmptyValue(
       item.author,
@@ -39,7 +37,6 @@ export default function NewsItem({ item, param, defaultClicked, handleFavorites}
       UserId: userLogged.UserId,
     };
     insertFavoriteToUser(fav).then((result) => {
-      console.log(result);
       if (result == 1) {
         Swal.fire("Added to favorites successfully!", "success");
         return;
@@ -60,13 +57,11 @@ export default function NewsItem({ item, param, defaultClicked, handleFavorites}
 
   const favoriteRemove = () => {
     //Remove favorites from DB
-    console.log(defaultClicked);
     let fav = {
       Url: item.url,
       UserId: userLogged.UserId,
     };
     deleteFavorite(fav).then((result) => {
-      console.log(result);
       Swal.fire("Article removed successfully!", "success");
     });
     //Handling only if we are on the My favorite component.

@@ -12,7 +12,6 @@ export default function SignWithGoogle() {
   const dashboard = () => navigate("/"); // navigate to login page on button click
 
   useEffect(() => {
-    console.log(amountRegistered);
   }, [amountRegistered])
   
   return (

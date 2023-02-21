@@ -57,7 +57,6 @@ const Dashboard = () => {
 
       getNumOfRegistered()
         .then((number) => {
-          console.log(number);
           setAmountRegistered(number);
         })
         .catch((error) => {
