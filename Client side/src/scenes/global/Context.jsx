@@ -34,6 +34,7 @@ export default function Context({ children }) {
 
   //User Logged context
   const [userLogged, setUserLogged] = useState({
+    UserId:-1,
     FirstName: "",
     LastName: "",
     Email: "",
@@ -41,6 +42,9 @@ export default function Context({ children }) {
     Image:
       "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-9.jpg",
   });
+
+  //Count the users.
+  const [amountRegistered, setAmountRegistered] = useState(0);
 
   return (
     <ChartsContext.Provider
@@ -75,6 +79,8 @@ export default function Context({ children }) {
         setProductsGeoChart,
         userLogged,
         setUserLogged,
+        amountRegistered,
+        setAmountRegistered,
       }}
     >
       {children}

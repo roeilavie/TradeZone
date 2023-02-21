@@ -16,6 +16,7 @@ import { useMode } from "./theme";
 import Context from "./scenes/global/Context";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import Favorites from "./components/Favorites";
 
 function App() {
   const [theme] = useMode();
@@ -40,6 +41,7 @@ function App() {
               <Route path="/geography" element={<Geography />} />
               <Route path="/network" element={<Network />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/favorites" element={<Favorites />} />
             </Routes>
           </main>
         </div>

@@ -13,6 +13,7 @@ import { ChartsContext } from "../global/Context";
 import { api_production } from "../../service/service";
 import {
   getCountries,
+  getNumOfRegistered,
   getProducts,
   getTotalTransactions,
 } from "../../data/ServiceFunctions";
@@ -53,6 +54,14 @@ const Dashboard = () => {
           console.error(error);
         });
 
+      getNumOfRegistered()
+        .then((number) => {
+          setAmountRegistered(number);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+
       fetch(`${api_production}/trades`, {
         method: "GET",
         headers: new Headers({
@@ -75,7 +84,7 @@ const Dashboard = () => {
     [],
     numOfCountries,
     numOfProducts,
-    totalTrades
+    totalTrades,
   );
 
   const {
@@ -92,6 +101,8 @@ const Dashboard = () => {
     alignmentGeoChart,
     productsGeoChart,
     yearGeoChart,
+    amountRegistered,
+    setAmountRegistered,
   } = useContext(ChartsContext);
   const [showBarChart, setShowBarChart] = useState(false);
 

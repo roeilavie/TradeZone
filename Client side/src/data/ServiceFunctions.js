@@ -74,7 +74,6 @@ export const getUser = (values) =>{
     Email: values.email,
     Pwd: values.password,
   };
-  console.log(user);
   return new Promise((resolve,reject) => {
     fetch(url, {
       method: "POST",
@@ -146,3 +145,104 @@ export const checkEmailExist = (email) =>{
       })
   });
 }
+
+export const getNumOfRegistered = () => {
+  const url = `${api_production}/Users`;
+  return new Promise((resolve,reject) =>{
+    fetch(url, {
+      method: "GET",
+      headers: new Headers({
+        "Content-Type": "application/json; charset=UTF-8",
+        Accept: "application/json; charset=UTF-8",
+      }),
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((result) => {
+        resolve(result);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+  });
+}
+
+export const insertFavoriteToUser = (fav) =>{
+  let favorite = {
+    Author:fav.Author,
+    Content:fav.Content,
+    Description:fav.Description,
+    PublishedAt:fav.PublishedAt,
+    Journal:fav.Journal,
+    Url:fav.Url,
+    Picture:fav.Picture,
+  };
+  let userId = fav.UserId;
+  const url = `${api_production}/Favorites?userId=${userId}`;
+  return new Promise((resolve,reject) => {
+    fetch(url, {
+      method: "POST",
+      body: JSON.stringify(favorite),
+      headers: new Headers({
+        "Content-Type": "application/json; charset=UTF-8",
+        Accept: "application/json; charset=UTF-8",
+      }),
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((result) => {
+        resolve(result);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+  });
+} 
+
+export const deleteFavorite = (fav) =>{
+  let favUrl = fav.Url;
+  let userId = fav.UserId;
+  const url = `${api_production}/Favorites?userId=${userId}&favUrl=${favUrl}`;
+  return new Promise((resolve,reject) => {
+    fetch(url, {
+      method: "Delete",
+      headers: new Headers({
+        "Content-Type": "application/json; charset=UTF-8",
+        Accept: "application/json; charset=UTF-8",
+      }),
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((result) => {
+        resolve(result);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+  });
+} 
+
+// get all the products
+export const getAllUserFavorites = (userId) => {
+  return new Promise((resolve, reject) => {
+    fetch(`${api_production}/Favorites?userId=${userId}`, {
+      method: "GET",
+      headers: new Headers({
+        "Content-Type": "application/json; charset=UTF-8",
+        Accept: "application/json; charset=UTF-8",
+      }),
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((result) => {
+        resolve(result);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};

@@ -29,7 +29,6 @@ export default function Login() {
   };
   const { userLogged, setUserLogged } = useContext(ChartsContext);
   const handleFormSubmit = (values) => {
-    console.log(values);
     if (!validEmail) {
       Swal.fire({
         icon: "info",
@@ -64,8 +63,8 @@ export default function Login() {
               }
             });
           } else {
-            console.log(user);
             setUserLogged({
+              UserId:user.UserId,
               FirstName: user.First_name,
               Email: user.Email,
               LastName: user.Last_name,

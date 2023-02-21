@@ -13,7 +13,8 @@ const Header = ({ title, subtitle,onClick,underline}) => {
       >
         {title}
       </Typography>
-      <Typography variant="h5" onClick={onClick} color={colors.greenAccent[400]}>
+      {/* Only cursor in the login page */}
+      <Typography variant="h5" style={subtitle == "didn't sign up yet? " ? {cursor:"pointer"}: {}} onClick={onClick} color={colors.greenAccent[400]}>
         {subtitle}
         <u>{underline}</u>
       </Typography>

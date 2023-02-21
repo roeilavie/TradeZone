@@ -21,7 +21,7 @@ const News = () => {
     <Box m="20px">
       <Header title="News" subtitle="World News" />
       <Menu active={active} setActive={setActive} setCategory={setCategory} />
-      <NewsGrid items={items} />
+      {items.length > 0 && <NewsGrid items={items} defaultClicked={false}/>}
     </Box>
   );
 };
