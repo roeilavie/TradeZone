@@ -136,7 +136,7 @@ const Geography = () => {
         <Button
           onClick={handleAnimation}
           sx={{
-            backgroundColor: colors.greenAccent[700],
+            backgroundColor: colors.blueAccent[700],
             color: colors.grey[100],
             fontSize: "14px",
             fontWeight: "bold",

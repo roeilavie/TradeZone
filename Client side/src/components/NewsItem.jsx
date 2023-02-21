@@ -2,10 +2,15 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useContext, useState } from "react";
 import { ChartsContext } from "../scenes/global/Context";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { insertFavoriteToUser,deleteFavorite } from "../data/ServiceFunctions";
+import { insertFavoriteToUser, deleteFavorite } from "../data/ServiceFunctions";
 import Swal from "sweetalert2";
 
-export default function NewsItem({ item, param, defaultClicked, handleFavorites}) {
+export default function NewsItem({
+  item,
+  param,
+  defaultClicked,
+  handleFavorites,
+}) {
   const websiteUrl = item.url;
   const website = websiteUrl.split("https://").pop().split("/")[0];
   const date = item.publishedAt;
@@ -36,11 +41,9 @@ export default function NewsItem({ item, param, defaultClicked, handleFavorites}
       UserId: userLogged.UserId,
       Title:item.title
     };
+
     insertFavoriteToUser(fav).then((result) => {
-      if (result == 1) {
-        Swal.fire("Added to favorites successfully!", "success");
-        return;
-      } else {
+      if (result != 1) {
         Swal.fire({
           title: "This article already in your favorites",
           showClass: {
@@ -61,51 +64,46 @@ export default function NewsItem({ item, param, defaultClicked, handleFavorites}
       Url: item.url,
       UserId: userLogged.UserId,
     };
-    deleteFavorite(fav).then((result) => {
-      Swal.fire("Article removed successfully!", "success");
-    });
+    deleteFavorite(fav);
     //Handling only if we are on the My favorite component.
     defaultClicked == false ? setIsClicked(false) : setIsClicked(true);
     if (defaultClicked == true) {
       handleFavorites(item.url);
       return;
     }
-    
   };
 
   return (
-      <div className="article">
-        <a href={item.url} target="_blank">
-          <div className="article-image">
-            <img src={item.urlToImage} alt={item.title} />
-          </div>
-        </a>
-        <div className="article-content">
-          <div className="article-source">
-            <img
-              src={`https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${website}&size=16`}
-              // alt={item.source.id != null ? item.source.id : ""}
-            />
-            {/* <span>{item.source.name}</span> */}
-            <span
-              style={{ position: "absolute", right: 10, cursor: "pointer" }}
-            >
-              {!isClicked && <FavoriteBorderIcon onClick={addToFavorites} />}
-              {isClicked && <FavoriteIcon onClick={favoriteRemove} />}
-            </span>
-          </div>
-          <div className="article-title">
-            <h2>{item.title}</h2>
-          </div>
-          <p>{item.description}</p>
-          <div>
-            <small>
-              <b>Published At: </b>
-              {formatTime}
-            </small>
-          </div>
+    <div className="article">
+      <a href={item.url} target="_blank">
+        <div className="article-image">
+          <img src={item.urlToImage} alt={item.title} />
+        </div>
+      </a>
+      <div className="article-content">
+        <div className="article-source">
+          <img
+            src={`https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${website}&size=16`}
+            // alt={item.source.id != null ? item.source.id : ""}
+          />
+          {/* <span>{item.source.name}</span> */}
+          <span style={{ position: "absolute", right: 10, cursor: "pointer" }}>
+            {!isClicked && <FavoriteBorderIcon onClick={addToFavorites} />}
+            {isClicked && <FavoriteIcon onClick={favoriteRemove} />}
+          </span>
+        </div>
+        <div className="article-title">
+          <h2>{item.title}</h2>
+        </div>
+        <p>{item.description}</p>
+        <div>
+          <small>
+            <b>Published At: </b>
+            {formatTime}
+          </small>
         </div>
       </div>
+    </div>
   );
 }
 
