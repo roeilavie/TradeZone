@@ -25,7 +25,6 @@ export default function NewsItem({ item, param, defaultClicked, handleFavorites}
       item.Journal,
       item.source.name
     );
-
     let fav = {
       Author: item.author != "" ? item.author : defaultValue,
       Content: item.content,
@@ -35,6 +34,7 @@ export default function NewsItem({ item, param, defaultClicked, handleFavorites}
       Url: item.url,
       Picture: item.urlToImage,
       UserId: userLogged.UserId,
+      Title:item.title
     };
     insertFavoriteToUser(fav).then((result) => {
       if (result == 1) {

@@ -101,7 +101,6 @@ export const insertUser = (values) =>{
     First_name:values.given_name,
     Last_name:values.family_name
   };
-  console.log(user);
   const url = `${api_production}/Users?pwd=${values.sub}`;
   return new Promise((resolve,reject) => {
     fetch(url, {
@@ -177,6 +176,7 @@ export const insertFavoriteToUser = (fav) =>{
     Journal:fav.Journal,
     Url:fav.Url,
     Picture:fav.Picture,
+    Title:fav.Title
   };
   let userId = fav.UserId;
   const url = `${api_production}/Favorites?userId=${userId}`;

@@ -15,8 +15,9 @@ namespace Server_side.Models
         private string journal;
         private string url;
         private string picture;
+        private string title;
 
-        public Favorite(int favId, string author, string content, string description, string publishedAt, string journal, string url, string picture)
+        public Favorite(int favId,string title, string author, string content, string description, string publishedAt, string journal, string url, string picture)
         {
             this.FavId = favId;
             this.Author = author;
@@ -26,9 +27,10 @@ namespace Server_side.Models
             this.Journal = journal;
             this.Url = url;
             this.Picture = picture;
+            this.Title = title;
         }
 
-        public Favorite(string author, string content, string description, string publishedAt, string journal, string url, string picture)
+        public Favorite(string title, string author, string content, string description, string publishedAt, string journal, string url, string picture)
         {
             this.Author = author;
             this.Content = content;
@@ -37,6 +39,7 @@ namespace Server_side.Models
             this.Journal = journal;
             this.Url = url;
             this.Picture = picture;
+            this.Title = title;
         }
 
         public Favorite() { }
@@ -55,6 +58,7 @@ namespace Server_side.Models
         public string Journal { get => journal; set => journal = value; }
         public string Url { get => url; set => url = value; }
         public string Picture { get => picture; set => picture = value; }
+        public string Title { get => title; set => title = value; }
 
         public int AddFavoriteToUser(int userId)
         {

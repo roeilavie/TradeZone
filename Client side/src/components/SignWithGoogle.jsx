@@ -25,7 +25,6 @@ export default function SignWithGoogle() {
         };
         //Check if the user exist in our DB.
         getUser(userObj).then((returnedUser) => {
-          console.log(returnedUser);
           if (returnedUser == null) {
             insertUser(user).then((result) => {
               if (result == 1) {
@@ -34,7 +33,6 @@ export default function SignWithGoogle() {
             });
             let numRegistered = amountRegistered + 1;
             setAmountRegistered((prev) => prev + 1);
-            console.log(amountRegistered);
             setUserLogged({
               UserId: numRegistered,
               FirstName: user.given_name,
@@ -55,8 +53,6 @@ export default function SignWithGoogle() {
               IsLogged: true,
               Image: user.picture,
             });
-            console.log(userLogged.UserId);
-            console.log(returnedUser.UserId);
             dashboard();
           }
         });

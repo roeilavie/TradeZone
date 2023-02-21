@@ -47,7 +47,6 @@ const changeObjProps = (arr) => {
 
     item.source = item.Source;
     delete item.Source;
-
     item.title = item.Title;
     delete item.Title;
 

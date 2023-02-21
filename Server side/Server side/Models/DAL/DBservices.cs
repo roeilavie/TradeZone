@@ -67,8 +67,9 @@ namespace Server_side.Models
                 string journal = dr["Journal"].ToString();
                 string url = dr["Url"].ToString();
                 string picture = dr["Picture"].ToString();
+                string title = dr["Title"].ToString();
 
-                favorites.Add(new Favorite( author,  content,  description,  publishedAt,  journal,  url,  picture));
+                favorites.Add(new Favorite(title, author,  content,  description,  publishedAt,  journal,  url,  picture));
             }
 
             con.Close();
@@ -161,6 +162,7 @@ namespace Server_side.Models
             command.Parameters.AddWithValue("@journal", favorite.Journal);
             command.Parameters.AddWithValue("@url", favorite.Url);
             command.Parameters.AddWithValue("@picture", favorite.Picture);
+            command.Parameters.AddWithValue("@title", favorite.Title);
 
             //Added bit to decide if favorite was added or not.
             SqlParameter addedParam = new SqlParameter("@Added", SqlDbType.Bit);
