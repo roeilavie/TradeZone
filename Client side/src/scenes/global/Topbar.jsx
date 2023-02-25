@@ -1,11 +1,10 @@
 import { Box, IconButton } from "@mui/material";
 import { useContext } from "react";
-import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 import LoginIcon from "@mui/icons-material/Login";
 import { useNavigate } from "react-router-dom"; // import useHistory
 import { ChartsContext } from "./Context";
-import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
-import LogoutIcon from '@mui/icons-material/Logout';
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import LogoutIcon from "@mui/icons-material/Logout";
 const Topbar = () => {
   const navigate = useNavigate(); // get history from react-router
   const { userLogged, setUserLogged } = useContext(ChartsContext);
@@ -28,12 +27,6 @@ const Topbar = () => {
     <Box display="flex" justifyContent="flex-end" p={2}>
       {/* ICONS */}
       <Box display="flex">
-        <IconButton>
-          <NotificationsOutlinedIcon />
-        </IconButton>
-        {/* <IconButton>
-          <SettingsOutlinedIcon />
-        </IconButton> */}
         {userLogged.IsLogged && (
           <IconButton onClick={myFavorites}>
             <BookmarkBorderIcon />

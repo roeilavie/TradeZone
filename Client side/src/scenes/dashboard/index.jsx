@@ -1,4 +1,4 @@
-import { Box, Button, IconButton, Typography } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import { tokens } from "../../theme";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import CategoryIcon from "@mui/icons-material/Category";
@@ -84,7 +84,7 @@ const Dashboard = () => {
     [],
     numOfCountries,
     numOfProducts,
-    totalTrades,
+    totalTrades
   );
 
   const {
@@ -205,21 +205,6 @@ const Dashboard = () => {
           title="DASHBOARD"
           subtitle="A glimpse into the world of commerce"
         />
-
-        <Box>
-          <Button
-            sx={{
-              backgroundColor: colors.blueAccent[700],
-              color: colors.grey[100],
-              fontSize: "14px",
-              fontWeight: "bold",
-              padding: "10px 20px",
-            }}
-          >
-            <DownloadOutlinedIcon sx={{ mr: "10px" }} />
-            Download Reports
-          </Button>
-        </Box>
       </Box>
 
       {/* GRID & CHARTS */}
