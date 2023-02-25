@@ -24,7 +24,7 @@ export default function NewsItem({
       return;
     }
     setIsClicked(true);
-    //Insert favorites to DB
+    //Getting not empty value from the author / journal / name.
     let defaultValue = getNotEmptyValue(
       item.author,
       item.Journal,
