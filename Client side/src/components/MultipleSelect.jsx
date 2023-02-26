@@ -40,6 +40,9 @@ export default function MultipleSelect(props) {
         getOptionDisabled={() =>
           props.values.length === props.limit ? true : false
         }
+        isOptionEqualToValue={(option, value) =>
+          props.type === "year" ? option === value : option.Id === value.Id
+        }
         id="multiple-limit-tags"
         options={results}
         getOptionLabel={(option) => {

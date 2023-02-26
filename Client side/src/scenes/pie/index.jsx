@@ -54,10 +54,7 @@ const Pie = () => {
       })
       .then(
         (result) => {
-          if (result.length < 1) {
-            setData([]);
-            return alert("No data");
-          }
+          if (result.length < 1) return setData([]);
           let sum = 0;
           result.map((d, index) => (sum += d.Sum_values_of_product));
           let newData = result.map((d, index) => {
@@ -68,7 +65,6 @@ const Pie = () => {
               color: d.Color,
             };
           });
-          console.log(newData);
           setData(newData);
         },
         (error) => {
