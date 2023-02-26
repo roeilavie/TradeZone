@@ -33,13 +33,12 @@ function ChildModal(props) {
   return (
     <Fragment>
       {props.data.map((com) => (
-        <span><Button
+        <span key={com.group}><Button
         sx={{
           backgroundColor: colors.blueAccent[700],
           color: colors.grey[100],
           fontWeight: "bold",
         }}
-        key={com.group}
         value={com.group}
         onClick={handleOpen}
       >

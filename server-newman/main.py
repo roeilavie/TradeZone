@@ -1,7 +1,6 @@
 ##
-import json
 import pymssql as pymssql
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 import networkx as nx
 
@@ -34,7 +33,6 @@ def getCommunitiesNewmanData(data, nodesDict):
 
     response = {"data": {"nodes": [], "edges": []},
                 "modularity": modularityNum, "communitiesInfo": []}
-    print(communities)
     for i in range(len(communities)):
 
         total = 0
@@ -98,8 +96,9 @@ def getNewmanCommunities():
 
     newmanData = getCommunitiesNewmanData(data, nodesDict)
     # Process the resultset or return a message
-    return json.dumps(newmanData)
-
+    response = jsonify(newmanData)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
 
 # Close the connection and cursor
 

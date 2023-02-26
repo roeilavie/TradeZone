@@ -15,10 +15,10 @@ export default function index() {
   const [networkData, setNetworkData] = useState({ data : {nodes: [], edges: []}, communitiesInfo:[], modularity:0 });
   const colors = tokens();
   const [nodesSize, setNodesSize] = useState({
-    europe: 6,
-    americas: 5,
-    asia: 4,
-    africa: 3,
+    europe: 14,
+    americas: 11,
+    asia: 8,
+    africa: 5,
     oceania: 2,
   });
 
