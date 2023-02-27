@@ -153,8 +153,9 @@ namespace Server_side.Models
         {
             SqlCommand command = new SqlCommand();
             command.Parameters.AddWithValue("@userID", userId);
-            if (favorite.Author == null) favorite.Author = "";
-            if (favorite.Journal == null) favorite.Journal = "";
+            //if (favorite.Author == null) favorite.Author = "";
+            //if (favorite.Journal == null) favorite.Journal = "";
+            //if (favorite.Picture == null) favorite.Picture = "";
             command.Parameters.AddWithValue("@author", favorite.Author);
             command.Parameters.AddWithValue("@content", favorite.Content);
             command.Parameters.AddWithValue("@desc", favorite.Description);

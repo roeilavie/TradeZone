@@ -25,22 +25,20 @@ export default function NewsItem({
     }
     setIsClicked(true);
     //Insert favorites to DB
-    let defaultValue = getNotEmptyValue(
-      item.author,
-      item.Journal,
-      item.source.name
-    );
+
+    console.log(item);
     let fav = {
-      Author: item.author != "" ? item.author : defaultValue,
-      Content: item.content,
-      Description: item.description,
-      PublishedAt: item.publishedAt,
-      Journal: item.Journal != undefined ? item.Journal : defaultValue,
-      Url: item.url,
-      Picture: item.urlToImage,
+      Author: item.author != null ? item.author : "",
+      Content: item.content !== null ? item.content:"",
+      Description: item.description !== null ? item.description:"",
+      PublishedAt: item.publishedAt !== null ? item.publishedAt:"",
+      Journal: item.Journal != null ? item.Journal : "",
+      Url: item.url !== null ? item.url : "",
+      Picture:item.urlToImage !== null ? item.urlToImage : "",
       UserId: userLogged.UserId,
-      Title:item.title
+      Title:item.title !== null ? item.title : ""
     };
+    
 
     insertFavoriteToUser(fav).then((result) => {
       if (result != 1) {
@@ -107,8 +105,9 @@ export default function NewsItem({
   );
 }
 
-export const getNotEmptyValue = (str1, str2, str3) => {
+export const getNotEmptyValue = (str1, str2, str3,str4) => {
   if (str1 != null || str1 != "") return str1;
   if (str2 != null || str2 != "") return str2;
   if (str3 != null || str3 != "") return str3;
+  if (str4 != null || str4 != "") return str4;
 };

@@ -175,7 +175,7 @@ export const insertFavoriteToUser = (fav) =>{
     PublishedAt:fav.PublishedAt,
     Journal:fav.Journal,
     Url:fav.Url,
-    Picture:fav.Picture,
+    Picture:"",
     Title:fav.Title
   };
   let userId = fav.UserId;
