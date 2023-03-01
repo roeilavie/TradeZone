@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import ForceGraph2D from "react-force-graph-2d";
 
 export default function Network(props) {
-  const nodesColors = ['gray', "yellow", 'red', 'green',
-              'blue', 'pink', 'orange', 'brown'];
+  const nodesColors = ['gray', "yellow", 'red', 'blue',
+              'pink', 'green', 'orange', 'brown'];
   const nodes = props.data.nodes;
   const links = props.data.edges;
   const sizes = {
