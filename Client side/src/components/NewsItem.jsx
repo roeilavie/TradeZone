@@ -29,16 +29,15 @@ export default function NewsItem({
     console.log(item);
     let fav = {
       Author: item.author != null ? item.author : "",
-      Content: item.content !== null ? item.content:"",
-      Description: item.description !== null ? item.description:"",
-      PublishedAt: item.publishedAt !== null ? item.publishedAt:"",
+      Content: item.content !== null ? item.content : "",
+      Description: item.description !== null ? item.description : "",
+      PublishedAt: item.publishedAt !== null ? item.publishedAt : "",
       Journal: item.Journal != null ? item.Journal : "",
       Url: item.url !== null ? item.url : "",
-      Picture:item.urlToImage !== null ? item.urlToImage : "",
+      Picture: item.urlToImage !== null ? item.urlToImage : "",
       UserId: userLogged.UserId,
-      Title:item.title !== null ? item.title : ""
+      Title: item.title !== null ? item.title : "",
     };
-    
 
     insertFavoriteToUser(fav).then((result) => {
       if (result != 1) {
@@ -82,9 +81,9 @@ export default function NewsItem({
         <div className="article-source">
           <img
             src={`https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${website}&size=16`}
-            // alt={item.source.id != null ? item.source.id : ""}
+            alt={item.source.id != null ? item.source.id : ""}
           />
-          {/* <span>{item.source.name}</span> */}
+          <span>{item.source.name}</span>
           <span style={{ position: "absolute", right: 10, cursor: "pointer" }}>
             {!isClicked && <FavoriteBorderIcon onClick={addToFavorites} />}
             {isClicked && <FavoriteIcon onClick={favoriteRemove} />}
@@ -105,7 +104,7 @@ export default function NewsItem({
   );
 }
 
-export const getNotEmptyValue = (str1, str2, str3,str4) => {
+export const getNotEmptyValue = (str1, str2, str3, str4) => {
   if (str1 != null || str1 != "") return str1;
   if (str2 != null || str2 != "") return str2;
   if (str3 != null || str3 != "") return str3;
