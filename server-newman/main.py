@@ -14,12 +14,19 @@ def getCommunitiesNewmanData(data, nodesDict):
 
     # Create an empty graph
     G = nx.Graph()
+    nodes_to_remove = []
 
     # Add nodes and links to the graph
     for k in nodesDict:
         G.add_node(nodesDict.get(k)['id'], name=k)
     for row in data:
-        G.add_edge(nodesDict[row[0]]['id'], nodesDict[row[1]]['id'], strength=row[4])
+        G.add_edge(nodesDict[row[0]]['id'],
+                   nodesDict[row[1]]['id'], strength=row[4])
+    for node in G.nodes():
+        if len(list(G.neighbors(node))) == 0:
+            nodes_to_remove.append(node)
+    for node in nodes_to_remove:
+        G.remove_node(node)
     communities = nx.algorithms.community.greedy_modularity_communities(G)
     modularityNum = nx.algorithms.community.modularity(G, communities)
 
@@ -63,7 +70,8 @@ def getCommunitiesNewmanData(data, nodesDict):
 
     idEdge = 300
     for s, t, v in G.edges(data='strength'):
-        edges.append({"source": s, "target": t, "color": "#e0e0e0", 'value': v})
+        edges.append({"source": s, "target": t,
+                     "color": "#e0e0e0", 'value': v})
         idEdge += 1
     response.get('data')['nodes'] = nodes
     response.get('data')['edges'] = edges
@@ -84,7 +92,8 @@ def getNewmanCommunities():
     # Loop through the tuples in the array
     for country in rows:
         # Add the key-value pair to the dictionary
-        nodesDict[country[2]] = {'id': country[0], 'name': country[1], 'continent': country[3]}
+        nodesDict[country[2]] = {'id': country[0],
+                                 'name': country[1], 'continent': country[3]}
 
     stored_proc_name = 'spReadTradesByInd&Year'
     ind = request.json.get('ind')
@@ -102,5 +111,6 @@ def getNewmanCommunities():
 
 # Close the connection and cursor
 
+
 if __name__ == '__main__':
-    app.run()
+    app.run(port=5001)
