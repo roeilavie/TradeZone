@@ -872,7 +872,8 @@ namespace Server_side.Models
                 string code = dr["Code"].ToString();
                 string name = dr["Name"].ToString();
                 int id = Convert.ToInt32(dr["Id"]);
-                countries.Add(new Country(id, name, code));
+                string continent = dr["Continent"].ToString();
+                countries.Add(new Country(id, name, code, continent));
             }
 
             con.Close();

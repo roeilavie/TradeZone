@@ -10,6 +10,7 @@ namespace Server_side.Models
         int id;
         string name;
         string code;
+        string continent;
         float sum_values_of_product;
         int year;
         List<Point> values_per_year;
@@ -46,12 +47,21 @@ namespace Server_side.Models
             this.sum_values_of_product = sum_values_of_product;
         }
 
+        public Country(int id, string name, string code, string continent)
+        {
+            this.id = id;
+            this.name = name;
+            this.code = code;
+            this.continent = continent;
+        }
+
         public int Id { get => id; set => id = value; }
         public string Name { get => name; set => name = value; }
         public string Code { get => code; set => code = value; }
         public float Sum { get => sum_values_of_product; set => sum_values_of_product = value; }
         public int Year { get => year; set => year = value; }
         public List<Point> Values_per_year { get => values_per_year; set => values_per_year = value; }
+        public string Continent { get => continent; set => continent = value; }
 
         // Get all countries
         public List<Country> GetAllCountries()
