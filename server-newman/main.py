@@ -1,5 +1,6 @@
 ##
 import pymssql as pymssql
+import requests
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import networkx as nx
@@ -20,8 +21,8 @@ def getCommunitiesNewmanData(data, nodesDict):
     for k in nodesDict:
         G.add_node(nodesDict.get(k)['id'], name=k)
     for row in data:
-        G.add_edge(nodesDict[row[0]]['id'],
-                   nodesDict[row[1]]['id'], strength=row[4])
+        G.add_edge(nodesDict[row.get('CouISO')]['id'],
+                   nodesDict[row.get('ParISO')]['id'], strength=row.get('Value'))
     for node in G.nodes():
         if len(list(G.neighbors(node))) == 0:
             nodes_to_remove.append(node)
@@ -81,35 +82,40 @@ def getCommunitiesNewmanData(data, nodesDict):
 
 @app.route('/newman', methods=['POST'])
 def getNewmanCommunities():
-    conn = pymssql.connect(server='Media.ruppin.ac.il', user='igroup101', password='igroup101_69556',
-                           database='igroup101_prod')
-    cursor = conn.cursor()
-    # Call the stored procedure
-    stored_proc_name = 'spGetAllCountries'
-    cursor.callproc(stored_proc_name)
-    rows = cursor.fetchall()
+    #url = 'https://proj.ruppin.ac.il/cgroup1/test2/tar2/api/countries'
+    #response = requests.get(url)
+    #rows = response.json()
+    #nodesDict = {}
+    #for country in rows:
+    #    nodesDict[country.get('Code')] = {'id': country.get('Id'),
+     #                                     'name': country.get('Name'), 'continent': country.get('Continent')}
+
+    #ind = request.json.get('ind')
+    #year = request.json.get('year')
+    #url = 'https://proj.ruppin.ac.il/cgroup1/test2/tar2/api/trades?ind=' + str(ind) + '&year=' + str(year)
+    #response = requests.get(url)
+    #data = response.json()
+
+    # newmanData = getCommunitiesNewmanData(data, nodesDict)
+    # response = jsonify(newmanData)
+    # response.headers.add('Access-Control-Allow-Origin', '*')
+    # return response
+
+    data = request.get_json()
+    if data == {} or data.get('countries') is None or data.get('trades') is None:
+        return
+
     nodesDict = {}
-    # Loop through the tuples in the array
-    for country in rows:
-        # Add the key-value pair to the dictionary
-        nodesDict[country[2]] = {'id': country[0],
-                                 'name': country[1], 'continent': country[3]}
+    for country in data.get('countries'):
+        nodesDict[country.get('Code')] = {'id': country.get('Id'),
+                                          'name': country.get('Name'), 'continent': country.get('Continent')}
 
-    stored_proc_name = 'spReadTradesByInd&Year'
-    ind = request.json.get('ind')
-    year = request.json.get('year')
-    cursor.callproc(stored_proc_name, (ind, year))
-    data = cursor.fetchall()
-    cursor.close()
-    conn.close()
 
-    newmanData = getCommunitiesNewmanData(data, nodesDict)
-    # Process the resultset or return a message
+    newmanData = getCommunitiesNewmanData(data.get('trades'), nodesDict)
+    print(newmanData)
     response = jsonify(newmanData)
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
-
-# Close the connection and cursor
 
 
 if __name__ == '__main__':

@@ -7,11 +7,13 @@ import NumberTextField from "../../components/NumberTextField";
 import Header from "../../components/Header";
 import { tokens } from "../../theme";
 import CommunityModal from "../../components/CommunityModal";
-import { api_python } from "../../service/service";
+import { api_python, api_production } from "../../service/service";
+import { getCountries } from "../../data/ServiceFunctions";
 
 export default function index() {
   const [year, setYear] = useState(CONST_YEAR);
   const [product, setProduct] = useState(CONST_CATEGORY);
+  const [sendData, setSendData] = useState({countries:[],trades:[]});
   const [networkData, setNetworkData] = useState({ data : {nodes: [], edges: []}, communitiesInfo:[], modularity:0 });
   const colors = tokens();
   const [nodesSize, setNodesSize] = useState({
@@ -59,6 +61,16 @@ export default function index() {
   };
 
   useEffect(() => {
+    getCountries()
+    .then((countries) => {
+      setSendData(prev => ({countries, trades:prev.trades}));
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  }, []);
+  
+  useEffect(() => {
     if (
       product === null ||
       year === null ||
@@ -66,30 +78,49 @@ export default function index() {
       product === undefined
     )
       return alert("You need to fill all the fields");
-    const sendData = { ind: product.Code, year: year };
 
-    fetch(`${api_python}`, {
-      method: "POST",
-      body: JSON.stringify(sendData),
-      headers: { "Content-Type": "application/json" },
+    fetch(`${api_production}/Trades?year=${year}&ind=${product.Code}`, {
+      method: "GET",
+      headers: new Headers({
+        "Content-Type": "application/json; charset=UTF-8",
+        Accept: "application/json; charset=UTF-8",
+      }),
     })
       .then((res) => {
         return res.json();
       })
       .then(
         (result) => {
-          setNetworkData(result);
-          console.log(result);
+          setSendData(prev => ({countries:prev.countries, trades:result}));
         },
         (error) => {
-          console.log("err post=", error);
+          console.log("err GET=", error);
         }
       );
+
+      
   }, [product, year]);
 
-  const openModalStats = () => {
+  useEffect(() => {
+    if (sendData.countries.length > 0 && sendData.trades.length > 0)
+      fetch(`${api_python}`, {
+        method: "POST",
+        body: JSON.stringify(sendData),
+        headers: { "Content-Type": "application/json" },
+      })
+        .then((res) => {
+          return res.json();
+        })
+        .then(
+          (result) => {
+            setNetworkData(result);
+          },
+          (error) => {
+            console.log("err post=", error);
+          }
+        );
+  }, [sendData]);
 
-  }
 
   return (
     <Box m="20px">
