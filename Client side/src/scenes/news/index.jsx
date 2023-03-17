@@ -10,7 +10,7 @@ const News = () => {
   const [category, setCategory] = useState("general");
 
   useEffect(() => {
-    const url = `http://roeilavie.pythonanywhere.com?category=${category}`;
+    const url = `https://roeilavie.pythonanywhere.com/?category=${category}`;
     fetch(url, {
       method: "GET",
       headers: { "Content-Type": "application/json" },

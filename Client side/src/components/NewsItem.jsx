@@ -81,7 +81,7 @@ export default function NewsItem({
         <div className="article-source">
           <img
             src={`https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${website}&size=16`}
-            alt={item.source.id != null ? item.source.id : ""}
+            alt={item.source != undefined ? item.source.id : ""}
           />
           <span>{item.source.name}</span>
           <span style={{ position: "absolute", right: 10, cursor: "pointer" }}>
