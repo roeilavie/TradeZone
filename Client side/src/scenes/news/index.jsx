@@ -10,10 +10,16 @@ const News = () => {
   const [category, setCategory] = useState("general");
 
   useEffect(() => {
-    const url = `https://newsapi.org/v2/top-headlines?country=us&category=${category}&apiKey=baa59cfa2f64449ab76cf4d1b718714f`;
-    fetch(url)
+    const url = `http://roeilavie.pythonanywhere.com?category=${category}`;
+    fetch(url, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    })
       .then((res) => res.json())
-      .then((data) => setItems(data.articles))
+      .then((data) => {
+        setItems([]);
+        setItems(data.articles);
+      })
       .catch((err) => console.error("error:" + err));
   }, [category]);
 
@@ -21,7 +27,7 @@ const News = () => {
     <Box m="20px">
       <Header title="News" subtitle="World News" />
       <Menu active={active} setActive={setActive} setCategory={setCategory} />
-      {items.length > 0 && <NewsGrid items={items} defaultClicked={false}/>}
+      {items.length > 0 && <NewsGrid items={items} defaultClicked={false} />}
     </Box>
   );
 };
