@@ -18,7 +18,6 @@ export default function Login() {
   const navigate = useNavigate(); // get history from react-router
   const register = () => navigate("/register"); // navigate to login page on button click
   const [validEmail, setValidEmail] = useState(false);
-  //   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   //Toggle the show password
@@ -63,6 +62,7 @@ export default function Login() {
               }
             });
           } else {
+
             setUserLogged({
               UserId:user.UserId,
               FirstName: user.First_name,
@@ -72,6 +72,7 @@ export default function Login() {
               Image:
                 "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSX1mtYL8f3jCPWwGO9yCiCJlbi8LikmuJMew&usqp=CAU",
             });
+            localStorage.setItem("user",JSON.stringify(user));
             let dashboard = () => navigate("/");
             dashboard();
           }

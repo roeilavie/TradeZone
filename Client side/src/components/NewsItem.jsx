@@ -30,7 +30,7 @@ export default function NewsItem({
     let fav = {
       Author: item.author != null ? item.author : "",
       Content: item.content !== null ? item.content : "",
-      Description: item.description !== null ? item.description : "",
+      Description: item.description !== null || item.Description !== null ? item.description || item.Description : "",
       PublishedAt: item.publishedAt !== null ? item.publishedAt : "",
       Journal: item.Journal != null ? item.Journal : "",
       Url: item.url !== null ? item.url : "",
@@ -38,7 +38,7 @@ export default function NewsItem({
       UserId: userLogged.UserId,
       Title: item.title !== null ? item.title : "",
     };
-
+    console.log(fav);
     insertFavoriteToUser(fav).then((result) => {
       if (result != 1) {
         Swal.fire({
@@ -83,7 +83,7 @@ export default function NewsItem({
             src={`https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${website}&size=16`}
             alt={item.source != undefined ? item.source.id : ""}
           />
-          <span>{item.source.name}</span>
+          <span>{item.source != undefined ? item.source.name : ""}</span>
           <span style={{ position: "absolute", right: 10, cursor: "pointer" }}>
             {!isClicked && <FavoriteBorderIcon onClick={addToFavorites} />}
             {isClicked && <FavoriteIcon onClick={favoriteRemove} />}

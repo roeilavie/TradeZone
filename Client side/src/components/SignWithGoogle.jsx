@@ -10,37 +10,49 @@ export default function SignWithGoogle() {
     useContext(ChartsContext);
   const navigate = useNavigate(); // get history from react-router
   const dashboard = () => navigate("/"); // navigate to login page on button click
-
   useEffect(() => {
   }, [amountRegistered])
   
   return (
     <GoogleLogin
       onSuccess={(credentialResponse) => {
-        const user = jwt_decode(credentialResponse.credential);
+        const googleUser = jwt_decode(credentialResponse.credential);
         //Matching the correct object format to the getUser function.
         let userObj = {
-          email: user.email,
-          password: user.sub,
+          email: googleUser.email,
+          password: googleUser.sub,
         };
         //Check if the user exist in our DB.
         getUser(userObj).then((returnedUser) => {
+          alert("event happened");
+          console.log(returnedUser);
+          console.log(googleUser);
           if (returnedUser == null) {
-            insertUser(user).then((result) => {
+            insertUser(googleUser).then((result) => {
               if (result == 1) {
                 console.log("Added successfully");
               }
             });
             let numRegistered = amountRegistered + 1;
             setAmountRegistered((prev) => prev + 1);
+            let user = {
+              UserId:numRegistered,
+              FirstName: googleUser.given_name,
+              Email: googleUser.email,
+              LastName: googleUser.family_name,
+              IsLogged: true,
+              Image: googleUser.picture,
+            };
             setUserLogged({
               UserId: numRegistered,
-              FirstName: user.given_name,
-              Email: user.email,
-              LastName: user.family_name,
+              FirstName: googleUser.given_name,
+              Email: googleUser.email,
+              LastName: googleUser.family_name,
               IsLogged: true,
-              Image: user.picture,
+              Image: googleUser.picture,
             });
+            console.log(user);
+            localStorage.setItem("user",JSON.stringify(user));
             dashboard();
           }
            else {
@@ -51,8 +63,10 @@ export default function SignWithGoogle() {
               Email: returnedUser.Email,
               LastName: returnedUser.Last_name,
               IsLogged: true,
-              Image: user.picture,
+              Image: googleUser.picture,
             });
+            returnedUser.Image = googleUser.picture;
+            localStorage.setItem("user",JSON.stringify(returnedUser));
             dashboard();
           }
         });

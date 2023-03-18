@@ -16,6 +16,7 @@ export default function Favorites() {
     getAllUserFavorites(userLogged.UserId).then((result) =>{
       // Changing prop name using dot notation to match the item format in the NewsGrid component.
       result = changeObjProps(result);
+      console.log(result);
       setItems(result);
     })
   }, []);

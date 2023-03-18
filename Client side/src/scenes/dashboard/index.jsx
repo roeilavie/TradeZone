@@ -25,7 +25,7 @@ const Dashboard = () => {
   const [numOfCountries, setNumOfCountries] = useState();
   const [numOfProducts, setNumOfProducts] = useState();
   const [totalTrades, setTotalTrades] = useState();
-
+  
   useEffect(
     () => {
       getTotalTransactions()

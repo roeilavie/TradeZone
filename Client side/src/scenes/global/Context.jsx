@@ -32,15 +32,28 @@ export default function Context({ children }) {
   const [productsGeoChart, setProductsGeoChart] = useState([CONST_CATEGORY]);
   const [yearGeoChart, setYearGeoChart] = useState(CONST_YEAR);
 
-  //User Logged context
-  const [userLogged, setUserLogged] = useState({
-    UserId:-1,
+  //User Logged context using localStorage for refreshing the page.
+  let storedUser = localStorage.getItem("user");
+  let initialUser = {
+    UserId: -1,
     FirstName: "",
     LastName: "",
     Email: "",
     IsLogged: false,
     Image:
       "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-9.jpg",
+  };
+  if (storedUser !== null) {
+    initialUser = JSON.parse(storedUser);
+  }
+  const [userLogged, setUserLogged] = 
+  useState(
+    {UserId:initialUser.UserId,
+      FirstName: initialUser.First_name,
+      LastName:initialUser.Last_name,
+      Email: initialUser.Email,
+      IsLogged: initialUser.Email !== "" ? true:false,
+      Image:initialUser.Image
   });
 
   //Count the users.

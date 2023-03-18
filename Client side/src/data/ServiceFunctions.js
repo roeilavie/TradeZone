@@ -96,6 +96,7 @@ export const getUser = (values) =>{
 };
 
 export const insertUser = (values) =>{
+  console.log(values);
   let user = {
     Email:values.email,
     First_name:values.given_name,
@@ -175,10 +176,11 @@ export const insertFavoriteToUser = (fav) =>{
     PublishedAt:fav.PublishedAt,
     Journal:fav.Journal,
     Url:fav.Url,
-    Picture:"",
+    Picture:fav.Picture,
     Title:fav.Title
   };
   let userId = fav.UserId;
+  console.log(userId);
   const url = `${api_production}/Favorites?userId=${userId}`;
   return new Promise((resolve,reject) => {
     fetch(url, {

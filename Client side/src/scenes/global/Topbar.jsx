@@ -17,6 +17,7 @@ const Topbar = () => {
       Image:
         "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-9.jpg",
     });
+    localStorage.clear();
     //toggle userLogged
     navigate("/login");
   }; // navigate to login page on button click

@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState,useEffect} from "react";
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Box, IconButton, Typography } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
@@ -37,8 +37,6 @@ const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
   const { userLogged } = useContext(ChartsContext);
-  const navigate = useNavigate("/register");
-
   return (
     <Box
       sx={{
