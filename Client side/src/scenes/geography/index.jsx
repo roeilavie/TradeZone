@@ -47,7 +47,7 @@ const Geography = () => {
       yearInterval++;
       setYearGeoChart((prev) => prev + 1);
       if (yearInterval === 2021) clearInterval(interval.current);
-    }, 1000);
+    }, 3000);
   };
 
   //Whether it's export or import.
@@ -95,9 +95,11 @@ const Geography = () => {
               value: c.Sum,
             };
           });
-          values = values.sort(function(a,b) { return a - b;});
+          values = values.sort(function (a, b) {
+            return a - b;
+          });
           min = values[0];
-          let max2 = values[values.length-4];
+          let max2 = values[values.length - 4];
           setDataGeoChart((prev) => ({ data: newData, min, max2 }));
         },
         (error) => {
