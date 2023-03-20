@@ -25,7 +25,7 @@ const Dashboard = () => {
   const [numOfCountries, setNumOfCountries] = useState();
   const [numOfProducts, setNumOfProducts] = useState();
   const [totalTrades, setTotalTrades] = useState();
-  
+
   useEffect(
     () => {
       getTotalTransactions()
@@ -98,6 +98,7 @@ const Dashboard = () => {
     countriesBarChart,
     countriesLineChart,
     setDataGeoChart,
+    dataGeoChart,
     alignmentGeoChart,
     productsGeoChart,
     yearGeoChart,
@@ -163,38 +164,41 @@ const Dashboard = () => {
           console.log("err post=", error);
         }
       );
-    const thirdUrl = `${api_production}/Countries?flow=${alignmentGeoChart}&year=${yearGeoChart}`;
-    fetch(thirdUrl, {
-      method: "POST",
-      body: JSON.stringify(productsGeoChart),
-      headers: new Headers({
-        "Content-Type": "application/json; charset=UTF-8",
-        Accept: "application/json; charset=UTF-8",
-      }),
-    })
-      .then((res) => {
-        return res.json();
+
+    if (dataGeoChart.data.length === 0) {
+      const thirdUrl = `${api_production}/Countries?flow=${alignmentGeoChart}&year=${yearGeoChart}`;
+      fetch(thirdUrl, {
+        method: "POST",
+        body: JSON.stringify(productsGeoChart),
+        headers: new Headers({
+          "Content-Type": "application/json; charset=UTF-8",
+          Accept: "application/json; charset=UTF-8",
+        }),
       })
-      .then(
-        (result) => {
-          let min = result[0].Sum;
-          let max = 0;
-          let newData = result.map((c, index) => {
-            //Getting the min max values.
-            min > c.Sum ? (min = c.Sum) : (min = min);
-            max < c.Sum ? (max = c.Sum) : (max = max);
-            return {
-              id: c.Code,
-              value: c.Sum,
-            };
-          });
-          setDataGeoChart((prev) => ({ data: newData, min, max }));
-        },
-        (error) => {
-          console.log("err post=", error);
-        }
-      );
-    // eslint-disable-next-line
+        .then((res) => {
+          return res.json();
+        })
+        .then(
+          (result) => {
+            let values = [];
+            let newData = result.map((c, index) => {
+              return {
+                id: c.Code,
+                value: c.Sum,
+              };
+            });
+            values = values.sort(function (a, b) {
+              return a - b;
+            });
+            let min = values[0];
+            let max = values[values.length - 4];
+            setDataGeoChart((prev) => ({ data: newData, min, max }));
+          },
+          (error) => {
+            console.log("err post=", error);
+          }
+        );
+    }
   }, []);
 
   return (
