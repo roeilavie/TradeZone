@@ -84,16 +84,21 @@ const Geography = () => {
           }
           let min = result[0].Sum;
           let max = 0;
+          let values = [];
           let newData = result.map((c, index) => {
             //Getting the min max values.
-            min > c.Sum ? (min = c.Sum) : (min = min);
-            max < c.Sum ? (max = c.Sum) : (max = max);
+            min = min > c.Sum ? c.Sum : min;
+            max = max < c.Sum ? c.Sum : max;
+            values.push(c.Sum);
             return {
               id: c.Code,
               value: c.Sum,
             };
           });
-          setDataGeoChart((prev) => ({ data: newData, min, max }));
+          values = values.sort(function(a,b) { return a - b;});
+          min = values[0];
+          let max2 = values[values.length-4];
+          setDataGeoChart((prev) => ({ data: newData, min, max2 }));
         },
         (error) => {
           console.log("err post=", error);
