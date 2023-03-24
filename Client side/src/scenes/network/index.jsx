@@ -13,8 +13,12 @@ import { getCountries } from "../../data/ServiceFunctions";
 export default function index() {
   const [year, setYear] = useState(CONST_YEAR);
   const [product, setProduct] = useState(CONST_CATEGORY);
-  const [sendData, setSendData] = useState({countries:[],trades:[]});
-  const [networkData, setNetworkData] = useState({ data : {nodes: [], edges: []}, communitiesInfo:[], modularity:0 });
+  const [sendData, setSendData] = useState({ countries: [], trades: [] });
+  const [networkData, setNetworkData] = useState({
+    data: { nodes: [], edges: [] },
+    communitiesInfo: [],
+    modularity: 0,
+  });
   const colors = tokens();
   const [nodesSize, setNodesSize] = useState({
     europe: 14,
@@ -30,46 +34,70 @@ export default function index() {
   };
 
   const numberTextFieldChange = (value, name) => {
-    
-      switch (name) {
-        case "Europe":
-          setNodesSize((prev) => ({europe: value,
-            americas: prev.americas, asia: prev.asia, africa: prev.africa, oceania: prev.oceania}));
-          break;
-  
-        case "Americas":
-          console.log(value,name)
-          setNodesSize((prev) => ({europe: prev.europe,
-            americas: value, asia: prev.asia, africa: prev.africa, oceania: prev.oceania}));
-          break;
-  
-        case "Asia":
-          setNodesSize((prev) => ({europe: prev.europe,
-            americas: prev.americas, asia: value, africa: prev.africa, oceania: prev.oceania}));
-          break;
+    switch (name) {
+      case "Europe":
+        setNodesSize((prev) => ({
+          europe: value,
+          americas: prev.americas,
+          asia: prev.asia,
+          africa: prev.africa,
+          oceania: prev.oceania,
+        }));
+        break;
 
-        case "Africa":
-          setNodesSize((prev) => ({europe: prev.europe,
-            americas: prev.americas, asia: prev.asia, africa: value, oceania: prev.oceania}));
-          break;
+      case "Americas":
+        console.log(value, name);
+        setNodesSize((prev) => ({
+          europe: prev.europe,
+          americas: value,
+          asia: prev.asia,
+          africa: prev.africa,
+          oceania: prev.oceania,
+        }));
+        break;
 
-        default: 
-          setNodesSize((prev) => ({europe: prev.europe,
-            americas: prev.americas, asia: prev.asia, africa: prev.africa, oceania: value}));
-          break;
-      }
+      case "Asia":
+        setNodesSize((prev) => ({
+          europe: prev.europe,
+          americas: prev.americas,
+          asia: value,
+          africa: prev.africa,
+          oceania: prev.oceania,
+        }));
+        break;
+
+      case "Africa":
+        setNodesSize((prev) => ({
+          europe: prev.europe,
+          americas: prev.americas,
+          asia: prev.asia,
+          africa: value,
+          oceania: prev.oceania,
+        }));
+        break;
+
+      default:
+        setNodesSize((prev) => ({
+          europe: prev.europe,
+          americas: prev.americas,
+          asia: prev.asia,
+          africa: prev.africa,
+          oceania: value,
+        }));
+        break;
+    }
   };
 
   useEffect(() => {
     getCountries()
-    .then((countries) => {
-      setSendData(prev => ({countries, trades:prev.trades}));
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+      .then((countries) => {
+        setSendData((prev) => ({ countries, trades: prev.trades }));
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }, []);
-  
+
   useEffect(() => {
     if (
       product === null ||
@@ -91,14 +119,15 @@ export default function index() {
       })
       .then(
         (result) => {
-          setSendData(prev => ({countries:prev.countries, trades:result}));
+          setSendData((prev) => ({
+            countries: prev.countries,
+            trades: result,
+          }));
         },
         (error) => {
           console.log("err GET=", error);
         }
       );
-
-      
   }, [product, year]);
 
   useEffect(() => {
@@ -121,7 +150,6 @@ export default function index() {
         );
   }, [sendData]);
 
-
   return (
     <Box m="20px">
       <Header
@@ -131,21 +159,45 @@ export default function index() {
       <Box display="flex" justifyContent="space-evenly" alignItems="center">
         <LiveSearch type="year" handleChange={liveSearchChange} />
         <LiveSearch type="category" handleChange={liveSearchChange} />
-        <NumberTextField name='Europe' value={nodesSize.europe} handleChange={numberTextFieldChange}/>
-        <NumberTextField name='Americas' value={nodesSize.americas} handleChange={numberTextFieldChange}/>
-        <NumberTextField name='Asia' value={nodesSize.asia} handleChange={numberTextFieldChange}/>
-        <NumberTextField name='Africa' value={nodesSize.africa} handleChange={numberTextFieldChange}/>
-        <NumberTextField name='Oceania' value={nodesSize.oceania} handleChange={numberTextFieldChange}/>
+        <NumberTextField
+          name="Europe"
+          value={nodesSize.europe}
+          handleChange={numberTextFieldChange}
+        />
+        <NumberTextField
+          name="Americas"
+          value={nodesSize.americas}
+          handleChange={numberTextFieldChange}
+        />
+        <NumberTextField
+          name="Asia"
+          value={nodesSize.asia}
+          handleChange={numberTextFieldChange}
+        />
+        <NumberTextField
+          name="Africa"
+          value={nodesSize.africa}
+          handleChange={numberTextFieldChange}
+        />
+        <NumberTextField
+          name="Oceania"
+          value={nodesSize.oceania}
+          handleChange={numberTextFieldChange}
+        />
       </Box>{" "}
       <br />
       <Box
-        height="75vh"
+        height={800}
+        width={1520}
         border={`1px solid ${colors.grey[100]}`}
         borderRadius="4px"
         className="chart"
       >
-        <CommunityModal data={networkData.communitiesInfo} modularity={networkData.modularity}/>
-        <Network data={networkData.data} nodesSize={nodesSize}/>
+        <CommunityModal
+          data={networkData.communitiesInfo}
+          modularity={networkData.modularity}
+        />
+        <Network data={networkData.data} nodesSize={nodesSize} />
       </Box>
     </Box>
   );

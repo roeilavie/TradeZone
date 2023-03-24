@@ -104,6 +104,7 @@ const Dashboard = () => {
     yearGeoChart,
     amountRegistered,
     setAmountRegistered,
+    layout,
   } = useContext(ChartsContext);
   const [showBarChart, setShowBarChart] = useState(false);
 
@@ -376,7 +377,7 @@ const Dashboard = () => {
             Sales Quantity Specific Year
           </Typography>
           <Box height="250px" mt="-20px" className="chart">
-            {showBarChart && <BarChart isDashboard={true} />}
+            {showBarChart && <BarChart isDashboard={true} layout={layout} />}
           </Box>
         </Box>
         <Box

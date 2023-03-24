@@ -46,18 +46,18 @@ export default function Context({ children }) {
   if (storedUser !== null) {
     initialUser = JSON.parse(storedUser);
   }
-  const [userLogged, setUserLogged] = 
-  useState(
-    {UserId:initialUser.UserId,
-      FirstName: initialUser.First_name,
-      LastName:initialUser.Last_name,
-      Email: initialUser.Email,
-      IsLogged: initialUser.Email !== "" ? true:false,
-      Image:initialUser.Image
+  const [userLogged, setUserLogged] = useState({
+    UserId: initialUser.UserId,
+    FirstName: initialUser.First_name,
+    LastName: initialUser.Last_name,
+    Email: initialUser.Email,
+    IsLogged: initialUser.Email !== "" ? true : false,
+    Image: initialUser.Image,
   });
 
   //Count the users.
   const [amountRegistered, setAmountRegistered] = useState(0);
+  const [layout, setLayout] = useState("vertical");
 
   return (
     <ChartsContext.Provider
@@ -94,6 +94,8 @@ export default function Context({ children }) {
         setUserLogged,
         amountRegistered,
         setAmountRegistered,
+        layout,
+        setLayout,
       }}
     >
       {children}

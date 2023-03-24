@@ -900,24 +900,56 @@ namespace Server_side.Models
                 countries.Add(new Country(countrieSelected[i].Code, sum_values_of_product));
                 con.Close();
             }
+            countries.Sort();
             return countries;
+        }
 
+        // Read Data for the histogram chart
+        public static List<Country> DataForHistogramChart(string ind, string flow, int year)
+        {
+            List<Country> countries = new List<Country>();
+            SqlConnection con = Connect();
+            SqlCommand command = null;
+            string textSP = "";
 
-            //SqlDataReader dr = command.ExecuteReader(CommandBehavior.CloseConnection);
-            //List<Country> countries = new List<Country>();
+            if(ind == "All" && year == 1)
+            {
+                if (flow == "Export") textSP = "spTop10WithOnlyExport";
+                else textSP = "spTop10WithOnlyImport";
+                command = CreateCommand(con, textSP);
+            }
 
-            //while (dr.Read())
-            //{
-            //    string code = dr["Code"].ToString();
-            //    string name = dr["Name"].ToString();
-            //    int id = Convert.ToInt32(dr["Id"]);
-            //    float sum_values_of_product = Convert.ToSingle(dr["sum_values_of_product"]);
-            //    string sum_values_of_productColor = "hsl(208, 70%, 50%)";
-            //    countries.Add(new Country(id, name, code, sum_values_of_product, sum_values_of_productColor));
-            //}
+            else if (ind == "All" && year != 1)
+            {
+                if (flow == "Export") textSP = "spTop10WithExportAndYear";
+                else textSP = "spTop10WithImportAndYear";
+                command = CreateReadCommand(con, textSP, year);
+            }
 
-            //con.Close();
-            //return countries;
+            else if (ind != "All" && year == 1)
+            {
+                if (flow == "Export") textSP = "spTop10WithExportAndCode";
+                else textSP = "spTop10WithImportAndCode";
+                command = CreateReadByAttrCommand(con, textSP, ind);
+            }
+
+            else if (ind != "All" && year != 1)
+            {
+                if (flow == "Export") textSP = "spTop10WithExportCodeAndYear";
+                else textSP = "spTop10WithImportCodeAndYear";
+                command = CreateReadByAttrCommand(con, textSP, ind, year);
+            }
+            SqlDataReader dr = command.ExecuteReader(CommandBehavior.CloseConnection);
+
+            while (dr.Read())
+            {
+                string code = dr["Code"].ToString();
+                float sum_values_of_product = Convert.ToSingle(dr["Total"]);
+                countries.Add(new Country(code, sum_values_of_product));
+            }
+            con.Close();
+            countries.Sort();
+            return countries;
         }
 
         // Read Data for the line chart

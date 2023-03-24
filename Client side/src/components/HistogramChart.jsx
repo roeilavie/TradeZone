@@ -1,15 +1,12 @@
 import { ResponsiveBar } from "@nivo/bar";
 import { tokens } from "../theme";
-import { ChartsContext } from "../scenes/global/Context";
-import { useContext } from "react";
 
-const BarChart = ({ isDashboard = false, layout }) => {
+const HistogramChart = ({ data }) => {
   const colors = tokens();
-  const { dataBarChart } = useContext(ChartsContext);
 
   return (
     <ResponsiveBar
-      data={dataBarChart}
+      data={data}
       theme={{
         // added
         axis: {
@@ -43,7 +40,7 @@ const BarChart = ({ isDashboard = false, layout }) => {
       indexBy="Code"
       margin={{ top: 50, right: 130, bottom: 50, left: 100 }}
       padding={0.3}
-      layout={layout}
+      layout={"horizontal"}
       valueScale={{ type: "linear" }}
       indexScale={{ type: "band", round: true }}
       colors={{ scheme: "nivo" }}
@@ -76,7 +73,7 @@ const BarChart = ({ isDashboard = false, layout }) => {
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: layout === "vertical" ? "Country code" : "Values in milions",
+        legend: "Values in Billions",
         legendPosition: "middle",
         legendOffset: 40,
       }}
@@ -84,7 +81,7 @@ const BarChart = ({ isDashboard = false, layout }) => {
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: layout === "vertical" ? "Values in milions" : "Country code",
+        legend: "Country code",
         legendPosition: "middle",
         legendOffset: -80,
       }}
@@ -103,4 +100,4 @@ const BarChart = ({ isDashboard = false, layout }) => {
   );
 };
 
-export default BarChart;
+export default HistogramChart;

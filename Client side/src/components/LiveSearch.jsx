@@ -24,14 +24,15 @@ const LiveSearch = ({ type, handleChange, chart }) => {
     if (type === "category") {
       getProducts()
         .then((result) => {
+          result = [{ Id: 0, Details: "All", Code: "All" }, ...result];
           setResults(result);
         })
         .catch((error) => {
           console.error(error);
         });
     } else if (type === "year") {
-      let arr = [];
-      let index = 0;
+      let arr = ["All"];
+      let index = 1;
       for (let i = 1990; i <= 2021; i++, index++) arr[index] = i;
       setResults(arr);
     }
@@ -54,11 +55,14 @@ const LiveSearch = ({ type, handleChange, chart }) => {
       case "category":
         if (chart === "BarChart") setValue(categoryBarChart);
         if (chart === "LineChart") setValue(categoryLineChart);
+        if (chart === "HistogramChart")
+          setValue({ Id: 0, Details: "All", Code: "All" });
         else setValue(CONST_CATEGORY);
         break;
 
       case "year":
         if (chart === "BarChart") setValue(year);
+        if (chart === "HistogramChart") setValue("All");
         else setValue(CONST_YEAR);
         break;
 
@@ -70,7 +74,6 @@ const LiveSearch = ({ type, handleChange, chart }) => {
         setValue(CONST_REPORTER);
         break;
     }
-    // eslint-disable-next-line
   }, [results]);
 
   return (

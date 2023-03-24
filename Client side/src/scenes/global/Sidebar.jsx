@@ -1,4 +1,4 @@
-import { useContext, useState,useEffect} from "react";
+import { useContext, useState, useEffect } from "react";
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Box, IconButton, Typography } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
@@ -9,6 +9,7 @@ import SummarizeIcon from "@mui/icons-material/Summarize";
 import RssFeedIcon from "@mui/icons-material/RssFeed";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import BarChartOutlinedIcon from "@mui/icons-material/BarChartOutlined";
+import SignalCellularAltIcon from "@mui/icons-material/SignalCellularAltOutlined";
 import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutlined";
 import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
@@ -163,6 +164,13 @@ const Sidebar = () => {
             >
               Charts
             </Typography>
+            <Item
+              title="Histogram Chart"
+              to="/histogram"
+              icon={<SignalCellularAltIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
             <Item
               title="Bar Chart"
               to="/bar"

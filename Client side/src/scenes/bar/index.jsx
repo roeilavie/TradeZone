@@ -4,12 +4,15 @@ import BarChart from "../../components/BarChart";
 import LiveSearch from "../../components/LiveSearch";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useEffect } from "react";
 import { api_production } from "../../service/service";
 import { ChartsContext } from "../global/Context";
 import MultipleSelect from "../../components/MultipleSelect";
 import { CONST_REPORTER } from "../../data/ConstVariables";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
 
 const Bar = () => {
   const {
@@ -22,6 +25,8 @@ const Bar = () => {
     alignmentBarChart,
     countriesBarChart,
     setCountriesBarChart,
+    layout,
+    setLayout,
   } = useContext(ChartsContext);
 
   // changing the flow (Export/import)
@@ -107,9 +112,25 @@ const Bar = () => {
           <ToggleButton value="Export">Export</ToggleButton>
           <ToggleButton value="Import">Import</ToggleButton>
         </ToggleButtonGroup>
+        <FormGroup>
+          <FormControlLabel
+            control={
+              <Switch
+                color="secondary"
+                onClick={() =>
+                  layout === "vertical"
+                    ? setLayout("horizontal")
+                    : setLayout("vertical")
+                }
+                checked={layout === "vertical" ? false : true}
+              />
+            }
+            label={layout}
+          />
+        </FormGroup>
       </Box>
       <Box height="75vh" className="chart">
-        <BarChart />
+        <BarChart layout={layout} />
       </Box>
     </Box>
   );

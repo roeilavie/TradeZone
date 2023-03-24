@@ -5,7 +5,7 @@ using System.Web;
 
 namespace Server_side.Models
 {
-    public class Country
+    public class Country: IComparable<Country>
     {
         int id;
         string name;
@@ -81,10 +81,16 @@ namespace Server_side.Models
             return DBservices.DataForLineChart(category_id, flow, countries);
         }
 
-        // Get data for the pie chart
+        // Get data for the geo chart
         public List<Country> DataForGeoChart(List<Product> pieChartProducts, int year, string flow)
         {
             return DBservices.DataForGeoChart(pieChartProducts, flow, year);
+        }
+
+        // Get data for the histogram chart
+        public List<Country> DataForHistogramChart(string ind, string flow, int year)
+        {
+            return DBservices.DataForHistogramChart(ind, flow, year);
         }
 
         public override bool Equals(object obj)
@@ -94,6 +100,15 @@ namespace Server_side.Models
                    code == country.code;
         }
 
+        public int CompareTo(Country country)
+        {
+            // A null value means that this object is greater.
+            if (country == null)
+                return 1;
+
+            else
+                return this.sum_values_of_product.CompareTo(country.sum_values_of_product);
+        }
 
     }
 }

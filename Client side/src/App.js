@@ -4,6 +4,7 @@ import Topbar from "./scenes/global/Topbar";
 import Sidebar from "./scenes/global/Sidebar";
 import Dashboard from "./scenes/dashboard";
 import Audit from "./scenes/audit";
+import Histogram from "./scenes/histogram";
 import Bar from "./scenes/bar";
 import News from "./scenes/news";
 import Line from "./scenes/line";
@@ -34,6 +35,7 @@ function App() {
               <Route path="/audit" element={<Audit />} />
               <Route path="/news" element={<News />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/histogram" element={<Histogram />} />
               <Route path="/bar" element={<Bar />} />
               <Route path="/pie" element={<Pie />} />
               <Route path="/line" element={<Line />} />
