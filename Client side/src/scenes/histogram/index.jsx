@@ -7,7 +7,6 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { useEffect, useState, useRef } from "react";
 import { api_production } from "../../service/service";
 import { tokens } from "../../theme";
-import { fontSize } from "@mui/system";
 
 const Histogram = () => {
   const colors = tokens();
