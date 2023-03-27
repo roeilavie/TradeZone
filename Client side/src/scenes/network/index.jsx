@@ -105,7 +105,7 @@ export default function index() {
       year === undefined ||
       product === undefined
     )
-      return alert("You need to fill all the fields");
+      return;
 
     fetch(`${api_production}/Trades?year=${year}&ind=${product.Code}`, {
       method: "GET",

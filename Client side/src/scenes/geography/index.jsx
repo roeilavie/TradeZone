@@ -35,7 +35,7 @@ const Geography = () => {
 
   //Start the animation over the years
   const handleAnimation = () => {
-    if (text === "Stop Animation") {
+    if (text === "Stop Animation" || productsGeoChart.length === 0) {
       clearInterval(interval.current);
       setText("Start Animation");
       return;
@@ -80,7 +80,8 @@ const Geography = () => {
         (result) => {
           if (result.length < 1) {
             setDataGeoChart({ data: [], min: 0, max: 1 });
-            return alert("No data");
+            clearInterval(interval.current);
+            setText("Start Animation");
           }
           let values = [];
           let newData = result.map((c, index) => {

@@ -24,15 +24,18 @@ const LiveSearch = ({ type, handleChange, chart }) => {
     if (type === "category") {
       getProducts()
         .then((result) => {
-          result = [{ Id: 0, Details: "All", Code: "All" }, ...result];
+          result =
+            chart === "HistogramChart"
+              ? [{ Id: 0, Details: "All", Code: "All" }, ...result]
+              : result;
           setResults(result);
         })
         .catch((error) => {
           console.error(error);
         });
     } else if (type === "year") {
-      let arr = ["All"];
-      let index = 1;
+      let arr = chart === "HistogramChart" ? ["All"] : [];
+      let index = chart === "HistogramChart" ? 1 : 0;
       for (let i = 1990; i <= 2021; i++, index++) arr[index] = i;
       setResults(arr);
     }

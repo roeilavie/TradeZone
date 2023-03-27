@@ -37,7 +37,6 @@ const Pie = () => {
     let url = `Products?`;
     if (country === null || year === null || products.length < 1) {
       setData([]);
-      return alert("Please fill all the fields!");
     }
     url += `cou=${country.Code}&flow=${alignment}&year=${year}`;
 

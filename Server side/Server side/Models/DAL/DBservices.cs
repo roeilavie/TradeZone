@@ -945,7 +945,8 @@ namespace Server_side.Models
             {
                 string code = dr["Code"].ToString();
                 float sum_values_of_product = Convert.ToSingle(dr["Total"]);
-                countries.Add(new Country(code, sum_values_of_product));
+                string name = dr["Name"].ToString();
+                countries.Add(new Country(code, name ,sum_values_of_product));
             }
             con.Close();
             countries.Sort();

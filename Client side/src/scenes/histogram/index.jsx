@@ -30,17 +30,24 @@ const Histogram = () => {
 
   // changing the product/year
   const liveSearchChange = (value, type) => {
+    setShowYear(false);
+    setText("Start Animation");
+
     if (type === "year") {
       if (value === "All") setYear(1);
       else setYear(value);
     } else setProduct(value);
   };
 
-  // getting the data according the parameters (countries, category, year, flow)
+  // getting the data according the parameters (category, year, flow)
   useEffect(() => {
-    const url = `${api_production}/Countries?ind=${
-      product === null ? "All" : product.Code
-    }&flow=${alignment}&year=${year === null ? 1 : year}`;
+    if (product === null || year === null) {
+      setShowYear(false);
+      setText("Start Animation");
+      return;
+    }
+
+    const url = `${api_production}/Countries?ind=${product.Code}&flow=${alignment}&year=${year}`;
 
     fetch(url, {
       method: "GET",
@@ -71,21 +78,29 @@ const Histogram = () => {
 
   //Start the animation over the years
   const handleAnimation = () => {
+    if (product === null || year === null) return;
+
     setShowYear(!showYear);
     if (text === "Stop Animation") {
-      clearInterval(interval.current);
       setText("Start Animation");
       return;
     }
 
     setText("Stop Animation");
-    setYear(1990);
     interval.current = setInterval(() => {
       yearInterval++;
       setYear((prev) => prev + 1);
       if (yearInterval === 2021) clearInterval(interval.current);
     }, 3000);
   };
+
+  useEffect(() => {
+    if (text === "Start Animation") {
+      clearInterval(interval.current);
+    } else {
+      setYear(1990);
+    }
+  }, [text]);
 
   return (
     <Box m="20px">

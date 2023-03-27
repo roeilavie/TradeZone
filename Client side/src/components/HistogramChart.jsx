@@ -37,8 +37,8 @@ const HistogramChart = ({ data }) => {
         },
       }}
       keys={["Sum"]}
-      indexBy="Code"
-      margin={{ top: 50, right: 130, bottom: 50, left: 100 }}
+      indexBy="Name"
+      margin={{ top: 50, right: 130, bottom: 50, left: 200 }}
       padding={0.3}
       layout={"horizontal"}
       valueScale={{ type: "linear" }}
@@ -81,7 +81,6 @@ const HistogramChart = ({ data }) => {
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: "Country code",
         legendPosition: "middle",
         legendOffset: -80,
       }}
