@@ -5,12 +5,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import { insertFavoriteToUser, deleteFavorite } from "../data/ServiceFunctions";
 import Swal from "sweetalert2";
 
-export default function NewsItem({
-  item,
-  param,
-  defaultClicked,
-  handleFavorites,
-}) {
+export default function NewsItem({ item, defaultClicked, handleFavorites }) {
   const websiteUrl = item.url;
   const website = websiteUrl.split("https://").pop().split("/")[0];
   const date = item.publishedAt;
@@ -30,7 +25,10 @@ export default function NewsItem({
     let fav = {
       Author: item.author != null ? item.author : "",
       Content: item.content !== null ? item.content : "",
-      Description: item.description !== null || item.Description !== null ? item.description || item.Description : "",
+      Description:
+        item.description !== null || item.Description !== null
+          ? item.description || item.Description
+          : "",
       PublishedAt: item.publishedAt !== null ? item.publishedAt : "",
       Journal: item.Journal != null ? item.Journal : "",
       Url: item.url !== null ? item.url : "",

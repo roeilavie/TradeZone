@@ -5,10 +5,8 @@ import Header from "./Header";
 import { useState, useContext } from "react";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import Alert from "@mui/material/Alert";
-import Stack from "@mui/material/Stack";
 import Swal from "sweetalert2";
-import { api_production, validateEmail } from "../service/service";
+import { validateEmail } from "../service/service";
 import { ChartsContext } from "../scenes/global/Context";
 import { useNavigate } from "react-router-dom"; // import useHistory
 import SignWithGoogle from "./SignWithGoogle";
@@ -40,46 +38,44 @@ export default function Login() {
         if (result.isConfirmed) {
           // User clicked the confirm button
           // You can perform the delete operation here
-         
         }
       });
       return;
     }
 
     getUser(values)
-        .then((user) => {
-          if (user == null) {
-            Swal.fire({
-              icon: "info",
-              title: "Unknown user",
-              text: "You are not registered, press Confirm to register",
-              showCancelButton: true,
-              confirmButtonColor: "#3085d6",
-              cancelButtonColor: "#d33",
-            }).then((result) => {
-              if (result.isConfirmed) {
-                register();
-              }
-            });
-          } else {
-
-            setUserLogged({
-              UserId:user.UserId,
-              FirstName: user.First_name,
-              Email: user.Email,
-              LastName: user.Last_name,
-              IsLogged: true,
-              Image:
-                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSX1mtYL8f3jCPWwGO9yCiCJlbi8LikmuJMew&usqp=CAU",
-            });
-            localStorage.setItem("user",JSON.stringify(user));
-            let dashboard = () => navigate("/");
-            dashboard();
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      .then((user) => {
+        if (user == null) {
+          Swal.fire({
+            icon: "info",
+            title: "Unknown user",
+            text: "You are not registered, press Confirm to register",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              register();
+            }
+          });
+        } else {
+          setUserLogged({
+            UserId: user.UserId,
+            FirstName: user.First_name,
+            Email: user.Email,
+            LastName: user.Last_name,
+            IsLogged: true,
+            Image:
+              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSX1mtYL8f3jCPWwGO9yCiCJlbi8LikmuJMew&usqp=CAU",
+          });
+          localStorage.setItem("user", JSON.stringify(user));
+          let dashboard = () => navigate("/");
+          dashboard();
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   const initialValues = {
@@ -89,7 +85,12 @@ export default function Login() {
 
   return (
     <Box m="20px">
-      <Header title="Sign in" underline="click me" subtitle="didn't sign up yet? " onClick={register}/>
+      <Header
+        title="Sign in"
+        underline="click me"
+        subtitle="didn't sign up yet? "
+        onClick={register}
+      />
       <Formik onSubmit={handleFormSubmit} initialValues={initialValues}>
         {({ handleBlur, values, handleSubmit, handleChange }) => (
           <form onSubmit={handleSubmit}>
@@ -160,9 +161,9 @@ export default function Login() {
           </form>
         )}
       </Formik>
-      {(!validEmail) && (
-      <script>{`document.getElementById('email').focus();`}</script>
-    )}
+      {!validEmail && (
+        <script>{`document.getElementById('email').focus();`}</script>
+      )}
          
     </Box>
   );

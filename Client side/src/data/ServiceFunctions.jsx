@@ -1,5 +1,4 @@
 // get all the countries
-import { useNavigate } from "react-router-dom";
 import { api_production } from "../service/service";
 
 export const getCountries = () => {
@@ -67,14 +66,14 @@ export const getTotalTransactions = () => {
   });
 };
 
-export const getUser = (values) =>{
+export const getUser = (values) => {
   const url = `${api_production}/Users`;
 
   let user = {
     Email: values.email,
     Pwd: values.password,
   };
-  return new Promise((resolve,reject) => {
+  return new Promise((resolve, reject) => {
     fetch(url, {
       method: "POST",
       body: JSON.stringify(user),
@@ -91,19 +90,19 @@ export const getUser = (values) =>{
       })
       .catch((error) => {
         reject(error);
-      })
+      });
   });
 };
 
-export const insertUser = (values) =>{
+export const insertUser = (values) => {
   console.log(values);
   let user = {
-    Email:values.email,
-    First_name:values.given_name,
-    Last_name:values.family_name
+    Email: values.email,
+    First_name: values.given_name,
+    Last_name: values.family_name,
   };
   const url = `${api_production}/Users?pwd=${values.sub}`;
-  return new Promise((resolve,reject) => {
+  return new Promise((resolve, reject) => {
     fetch(url, {
       method: "POST",
       body: JSON.stringify(user),
@@ -120,13 +119,13 @@ export const insertUser = (values) =>{
       })
       .catch((error) => {
         reject(error);
-      })
+      });
   });
-}
+};
 
-export const checkEmailExist = (email) =>{
+export const checkEmailExist = (email) => {
   const url = `${api_production}/Users?email=${email}`;
-  return new Promise((resolve,reject) =>{
+  return new Promise((resolve, reject) => {
     fetch(url, {
       method: "GET",
       headers: new Headers({
@@ -142,13 +141,13 @@ export const checkEmailExist = (email) =>{
       })
       .catch((error) => {
         reject(error);
-      })
+      });
   });
-}
+};
 
 export const getNumOfRegistered = () => {
   const url = `${api_production}/Users`;
-  return new Promise((resolve,reject) =>{
+  return new Promise((resolve, reject) => {
     fetch(url, {
       method: "GET",
       headers: new Headers({
@@ -164,25 +163,25 @@ export const getNumOfRegistered = () => {
       })
       .catch((error) => {
         reject(error);
-      })
+      });
   });
-}
+};
 
-export const insertFavoriteToUser = (fav) =>{
+export const insertFavoriteToUser = (fav) => {
   let favorite = {
-    Author:fav.Author,
-    Content:fav.Content,
-    Description:fav.Description,
-    PublishedAt:fav.PublishedAt,
-    Journal:fav.Journal,
-    Url:fav.Url,
-    Picture:fav.Picture,
-    Title:fav.Title
+    Author: fav.Author,
+    Content: fav.Content,
+    Description: fav.Description,
+    PublishedAt: fav.PublishedAt,
+    Journal: fav.Journal,
+    Url: fav.Url,
+    Picture: fav.Picture,
+    Title: fav.Title,
   };
   let userId = fav.UserId;
   console.log(userId);
   const url = `${api_production}/Favorites?userId=${userId}`;
-  return new Promise((resolve,reject) => {
+  return new Promise((resolve, reject) => {
     fetch(url, {
       method: "POST",
       body: JSON.stringify(favorite),
@@ -199,15 +198,15 @@ export const insertFavoriteToUser = (fav) =>{
       })
       .catch((error) => {
         reject(error);
-      })
+      });
   });
-} 
+};
 
-export const deleteFavorite = (fav) =>{
+export const deleteFavorite = (fav) => {
   let favUrl = fav.Url;
   let userId = fav.UserId;
   const url = `${api_production}/Favorites?userId=${userId}&favUrl=${favUrl}`;
-  return new Promise((resolve,reject) => {
+  return new Promise((resolve, reject) => {
     fetch(url, {
       method: "Delete",
       headers: new Headers({
@@ -223,9 +222,9 @@ export const deleteFavorite = (fav) =>{
       })
       .catch((error) => {
         reject(error);
-      })
+      });
   });
-} 
+};
 
 // get all the products
 export const getAllUserFavorites = (userId) => {

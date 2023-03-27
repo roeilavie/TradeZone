@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Network from "../../components/NetworkChart";
 import { CONST_CATEGORY, CONST_YEAR } from "../../data/ConstVariables";
-import { Box, Button } from "@mui/material";
+import { Box } from "@mui/material";
 import LiveSearch from "../../components/LiveSearch";
 import NumberTextField from "../../components/NumberTextField";
 import Header from "../../components/Header";

@@ -1,13 +1,17 @@
-import { Box, Button, TextField,IconButton } from "@mui/material";
-import { Formik, insert } from "formik";
+import { Box, Button, TextField, IconButton } from "@mui/material";
+import { Formik } from "formik";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "./Header";
 import { ChartsContext } from "../scenes/global/Context";
 
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { validateEmail } from "../service/service";
 import Swal from "sweetalert2";
-import { checkEmailExist, dashboard, insertUser } from "../data/ServiceFunctions";
+import {
+  checkEmailExist,
+  dashboard,
+  insertUser,
+} from "../data/ServiceFunctions";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
@@ -19,7 +23,8 @@ export default function Register() {
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const [showPassword, setShowPassword] = useState(false);
   const handleMouseDownPassword = (event) => event.preventDefault();
-  const {setUserLogged,amountRegistered,setAmountRegistered} = useContext(ChartsContext);
+  const { setUserLogged, amountRegistered, setAmountRegistered } =
+    useContext(ChartsContext);
   const handleFormSubmit = (values) => {
     if (!validEmail) {
       Swal.fire({
@@ -29,7 +34,7 @@ export default function Register() {
         showCancelButton: false,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-      })
+      });
       return;
     }
 
@@ -50,15 +55,15 @@ export default function Register() {
         email: values.email,
         given_name: values.firstName,
         family_name: values.lastName,
-        sub:values.password
+        sub: values.password,
       };
       insertUser(userObj).then((result) => {
-        if(result == 1){
+        if (result == 1) {
           //Navigate to dashboard after user logged in.
           let numRegistered = amountRegistered + 1;
           setAmountRegistered((prev) => prev + 1);
           setUserLogged({
-            UserId:numRegistered,
+            UserId: numRegistered,
             FirstName: values.firstName,
             Email: values.email,
             LastName: values.lastName,
@@ -66,10 +71,9 @@ export default function Register() {
             Image:
               "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSX1mtYL8f3jCPWwGO9yCiCJlbi8LikmuJMew&usqp=CAU",
           });
-          return navigate("/");      
+          return navigate("/");
         }
-      })
-
+      });
     });
   };
 
@@ -80,7 +84,7 @@ export default function Register() {
     firstName: "",
     lastName: "",
     email: "",
-    password:"",
+    password: "",
   };
 
   return (
@@ -149,7 +153,7 @@ export default function Register() {
                 }
                 sx={{ width: "30%" }}
               />
-               <TextField
+              <TextField
                 variant="filled"
                 required={true}
                 value={values.password}
@@ -171,7 +175,7 @@ export default function Register() {
                 }}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                sx={{width:"30%"}}
+                sx={{ width: "30%" }}
               />
             </Box>
             <Box display="flex" justifyContent="start" mt="20px">
