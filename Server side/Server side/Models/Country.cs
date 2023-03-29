@@ -95,9 +95,9 @@ namespace Server_side.Models
         }
 
         // Get data for the histogram chart
-        public List<Country> DataForHistogramChart(string ind, string flow, int year)
+        public List<Country> DataForHistogramChart(string ind, string flow, int year, int countriesNumber)
         {
-            return DBservices.DataForHistogramChart(ind, flow, year);
+            return DBservices.DataForHistogramChart(ind, flow, year, countriesNumber);
         }
 
         public override bool Equals(object obj)

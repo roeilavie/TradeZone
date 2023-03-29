@@ -86,7 +86,7 @@ const Bar = () => {
           type="country"
           handleChange={multipleSelectChange}
           values={countriesBarChart}
-          limit={7}
+          limit={10}
           defaultVal={CONST_REPORTER}
         />
       </Box>

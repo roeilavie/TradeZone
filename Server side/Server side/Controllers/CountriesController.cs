@@ -18,10 +18,10 @@ namespace Server_side.Controllers
         }
 
         // GET api/<controller>
-        public List<Country> Get(string ind, string flow, int year)
+        public List<Country> Get(string ind, string flow, int year, int countriesNumber)
         {
             Country c = new Country();
-            return c.DataForHistogramChart(ind, flow, year);
+            return c.DataForHistogramChart(ind, flow, year, countriesNumber);
         }
 
         // get the data for the bar chart

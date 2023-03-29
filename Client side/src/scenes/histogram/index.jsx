@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import Header from "../../components/Header";
 import HistogramChart from "../../components/HistogramChart";
 import LiveSearch from "../../components/LiveSearch";
@@ -7,6 +7,7 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { useEffect, useState, useRef } from "react";
 import { api_production } from "../../service/service";
 import { tokens } from "../../theme";
+import Slider from "@mui/material/Slider";
 
 const Histogram = () => {
   const colors = tokens();
@@ -22,6 +23,7 @@ const Histogram = () => {
   const interval = useRef();
   const [text, setText] = useState("Start Animation");
   const [showYear, setShowYear] = useState(false);
+  const [countriesNumber, setCountriesNumber] = useState(10);
 
   // changing the flow (Export/import)
   const importOrExportChange = (event, newAlignment) => {
@@ -47,7 +49,7 @@ const Histogram = () => {
       return;
     }
 
-    const url = `${api_production}/Countries?ind=${product.Code}&flow=${alignment}&year=${year}`;
+    const url = `${api_production}/Countries?ind=${product.Code}&flow=${alignment}&year=${year}&countriesNumber=${countriesNumber}`;
 
     fetch(url, {
       method: "GET",
@@ -67,7 +69,7 @@ const Histogram = () => {
           console.log("err post=", error);
         }
       );
-  }, [alignment, product, year]);
+  }, [alignment, product, year, countriesNumber]);
 
   //When we leave the page, the interval stops
   useEffect(() => {
@@ -129,6 +131,21 @@ const Histogram = () => {
           <ToggleButton value="Export">Export</ToggleButton>
           <ToggleButton value="Import">Import</ToggleButton>
         </ToggleButtonGroup>
+        <Box width="15%" textAlign="center">
+          <Slider
+            step={1}
+            value={countriesNumber}
+            marks
+            min={1}
+            max={20}
+            valueLabelDisplay="on"
+            onChange={(event) => setCountriesNumber(event.target.value)}
+            style={{
+              color: colors.greenAccent[300],
+            }}
+          />
+          <Typography>Number of countries</Typography>
+        </Box>
         <Button
           onClick={handleAnimation}
           sx={{

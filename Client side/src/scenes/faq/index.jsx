@@ -16,6 +16,24 @@ const FAQ = () => {
       <Accordion defaultExpanded>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography color={colors.greenAccent[500]} variant="h5">
+            How can I use the histogram chart?
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Typography>
+            With the histogram chart you can investigate the global trades and
+            do comparison between states. In fact, the value there is the total
+            sum of the product on selected year. but you can also see all the
+            total of export and import all over the years. by clicking on
+            animation you can investigate treds over the years. You can select
+            each year from 1990 to 2021. Notice, you can select the number of
+            countries with the slider.
+          </Typography>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion defaultExpanded>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography color={colors.greenAccent[500]} variant="h5">
             How can I use the bar chart?
           </Typography>
         </AccordionSummary>
@@ -26,7 +44,7 @@ const FAQ = () => {
             of the product on selected year.
             <br />
             You can select each year from 1990 to 2021. Notice, you can select
-            up to 7 countries and see the differences.
+            up to 10 countries and see the differences.
           </Typography>
         </AccordionDetails>
       </Accordion>

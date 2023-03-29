@@ -50,6 +50,7 @@ namespace Server_side.Models
             return command;
         }
 
+        // Get all the favorites of a user
         public static List<Favorite> GetAllUserFavorites(int userId)
         {
             SqlConnection con = Connect();
@@ -75,7 +76,8 @@ namespace Server_side.Models
             con.Close();
             return favorites;
         }
-        //Delete favorite from DB
+
+        // Delete favorite from DB
         public static int DeleteFavorite(int userId, string favUrl)
         {
             //First need to check if the favorite already in the DB.
@@ -86,7 +88,7 @@ namespace Server_side.Models
             return numAffected;
         }
 
-        //Adding favorite to user
+        // Adding favorite to user
         private static SqlCommand CreateRemoveFavoriteCommand(SqlConnection con, string favUrl, int userId)
         {
             SqlCommand command = new SqlCommand();
@@ -124,6 +126,7 @@ namespace Server_side.Models
             return trades;
         }
 
+        // Add favorites to user
         public static int AddFavoriteToUser(Favorite favorite, int userId)
         {
             //First need to check if the favorite already in the DB.
@@ -674,7 +677,6 @@ namespace Server_side.Models
             return command;
         }
 
-
         // Create command for line chart
         private static SqlCommand CreateCommandLineChart(SqlConnection con, string text, string category_id, string code)
         {
@@ -765,6 +767,7 @@ namespace Server_side.Models
             con.Close();
             return numAffected;
         }
+
         //Create insert user command
         private static SqlCommand CreateInsertUserCommand(SqlConnection con, User u)
         {
@@ -795,6 +798,7 @@ namespace Server_side.Models
             con.Close();
             return result;
         }
+
         //Create email exist command
         private static SqlCommand CreateCheckEmailExist(SqlConnection con, string email)
         {
@@ -806,6 +810,7 @@ namespace Server_side.Models
             command.CommandTimeout = 10; // in seconds
             return command;
         }
+
         //Create command for user login
         private static SqlCommand CreateCommand(SqlConnection con, User u)
         {
@@ -819,6 +824,7 @@ namespace Server_side.Models
             return command;
         }
 
+        // Get the amount of registered
         public static int GetAmountRegistered()
         {       
             SqlConnection con = Connect();
@@ -851,6 +857,58 @@ namespace Server_side.Models
         private static SqlCommand CreateCommand(SqlConnection con, string text)
         {
             SqlCommand command = new SqlCommand();
+            command.CommandText = text;
+            command.Connection = con;
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.CommandTimeout = 10; // in seconds
+            return command;
+        }
+
+        // Create command for histogram chart with just number of countries parameter
+        private static SqlCommand CreateCommand(SqlConnection con, string text, int countriesNumber)
+        {
+            SqlCommand command = new SqlCommand();
+            command.Parameters.AddWithValue("@countriesNumber", countriesNumber);
+            command.CommandText = text;
+            command.Connection = con;
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.CommandTimeout = 10; // in seconds
+            return command;
+        }
+
+        // Create command for histogram chart with number of countries, year parameters
+        private static SqlCommand CreateCommand(SqlConnection con, string text, int year, int countriesNumber)
+        {
+            SqlCommand command = new SqlCommand();
+            command.Parameters.AddWithValue("@countriesNumber", countriesNumber);
+            command.Parameters.AddWithValue("@year", year);
+            command.CommandText = text;
+            command.Connection = con;
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.CommandTimeout = 10; // in seconds
+            return command;
+        }
+
+        // Create command for histogram chart with number of countries, indicator parameters
+        private static SqlCommand CreateCommand(SqlConnection con, string text, string ind, int countriesNumber)
+        {
+            SqlCommand command = new SqlCommand();
+            command.Parameters.AddWithValue("@countriesNumber", countriesNumber);
+            command.Parameters.AddWithValue("@ind", ind);
+            command.CommandText = text;
+            command.Connection = con;
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.CommandTimeout = 10; // in seconds
+            return command;
+        }
+
+        // Create command for histogram chart with number of countries, indicator, year parameters
+        private static SqlCommand CreateCommand(SqlConnection con, string text, string ind, int year, int countriesNumber)
+        {
+            SqlCommand command = new SqlCommand();
+            command.Parameters.AddWithValue("@countriesNumber", countriesNumber);
+            command.Parameters.AddWithValue("@ind", ind);
+            command.Parameters.AddWithValue("@year", year);
             command.CommandText = text;
             command.Connection = con;
             command.CommandType = System.Data.CommandType.StoredProcedure;
@@ -905,7 +963,7 @@ namespace Server_side.Models
         }
 
         // Read Data for the histogram chart
-        public static List<Country> DataForHistogramChart(string ind, string flow, int year)
+        public static List<Country> DataForHistogramChart(string ind, string flow, int year, int countriesNumber)
         {
             List<Country> countries = new List<Country>();
             SqlConnection con = Connect();
@@ -914,30 +972,30 @@ namespace Server_side.Models
 
             if(ind == "All" && year == 1)
             {
-                if (flow == "Export") textSP = "spTop10WithOnlyExport";
-                else textSP = "spTop10WithOnlyImport";
-                command = CreateCommand(con, textSP);
+                if (flow == "Export") textSP = "spTopWithOnlyExport";
+                else textSP = "spTopWithOnlyImport";
+                command = CreateCommand(con, textSP, countriesNumber);
             }
 
             else if (ind == "All" && year != 1)
             {
-                if (flow == "Export") textSP = "spTop10WithExportAndYear";
-                else textSP = "spTop10WithImportAndYear";
-                command = CreateReadCommand(con, textSP, year);
+                if (flow == "Export") textSP = "spTopWithExportAndYear";
+                else textSP = "spTopWithImportAndYear";
+                command = CreateCommand(con, textSP, year, countriesNumber);
             }
 
             else if (ind != "All" && year == 1)
             {
-                if (flow == "Export") textSP = "spTop10WithExportAndCode";
-                else textSP = "spTop10WithImportAndCode";
-                command = CreateReadByAttrCommand(con, textSP, ind);
+                if (flow == "Export") textSP = "spTopWithExportAndCode";
+                else textSP = "spTopWithImportAndCode";
+                command = CreateCommand(con, textSP, ind, countriesNumber);
             }
 
             else if (ind != "All" && year != 1)
             {
-                if (flow == "Export") textSP = "spTop10WithExportCodeAndYear";
-                else textSP = "spTop10WithImportCodeAndYear";
-                command = CreateReadByAttrCommand(con, textSP, ind, year);
+                if (flow == "Export") textSP = "spTopWithExportCodeAndYear";
+                else textSP = "spTopWithImportCodeAndYear";
+                command = CreateCommand(con, textSP, ind, year, countriesNumber);
             }
             SqlDataReader dr = command.ExecuteReader(CommandBehavior.CloseConnection);
 
