@@ -24,9 +24,6 @@ export default function SignWithGoogle() {
         };
         //Check if the user exist in our DB.
         getUser(userObj).then((returnedUser) => {
-          alert("event happened");
-          console.log(returnedUser);
-          console.log(googleUser);
           if (returnedUser == null) {
             insertUser(googleUser).then((result) => {
               if (result == 1) {
