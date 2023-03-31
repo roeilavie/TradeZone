@@ -350,4 +350,4 @@ MigrationBackup/
 .ionide/
 
 .DS_Store
-TradeZone/Server side/Server side/Web.config
+Web.config
