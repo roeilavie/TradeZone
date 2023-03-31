@@ -1,3 +1,4 @@
+//Coordinates for the geo map
 export const geoFeatures = {
   type: "FeatureCollection",
   features: [

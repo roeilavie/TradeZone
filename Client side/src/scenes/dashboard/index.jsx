@@ -26,66 +26,61 @@ const Dashboard = () => {
   const [numOfProducts, setNumOfProducts] = useState();
   const [totalTrades, setTotalTrades] = useState();
 
-  useEffect(
-    () => {
-      getTotalTransactions()
-        .then((totalTransactions) => {
-          setTotalTrades(totalTransactions);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-
-      //Get all countries for the boxes details.
-      getCountries()
-        .then((countries) => {
-          setNumOfCountries(countries.length);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-
-      //Get all products for the boxes details.
-      getProducts()
-        .then((products) => {
-          setNumOfProducts(products.length);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-
-      getNumOfRegistered()
-        .then((number) => {
-          setAmountRegistered(number);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-
-      fetch(`${api_production}/trades`, {
-        method: "GET",
-        headers: new Headers({
-          "Content-Type": "application/json; charset=UTF-8",
-          Accept: "application/json; charset=UTF-8",
-        }),
+  useEffect(() => {
+    getTotalTransactions()
+      .then((totalTransactions) => {
+        const formattedNumber = totalTransactions.toLocaleString("en-US");
+        setTotalTrades(formattedNumber);
       })
-        .then((res) => {
-          return res.json();
-        })
-        .then(
-          (result) => {
-            setTop10Transactions(result);
-          },
-          (error) => {
-            console.log("err post=", error);
-          }
-        );
-    },
-    [],
-    numOfCountries,
-    numOfProducts,
-    totalTrades
-  );
+      .catch((error) => {
+        console.error(error);
+      });
+
+    //Get all countries for the boxes details.
+    getCountries()
+      .then((countries) => {
+        setNumOfCountries(countries.length);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+    //Get all products for the boxes details.
+    getProducts()
+      .then((products) => {
+        setNumOfProducts(products.length);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+    getNumOfRegistered()
+      .then((number) => {
+        setAmountRegistered(number);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+    fetch(`${api_production}/trades`, {
+      method: "GET",
+      headers: new Headers({
+        "Content-Type": "application/json; charset=UTF-8",
+        Accept: "application/json; charset=UTF-8",
+      }),
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then(
+        (result) => {
+          setTop10Transactions(result);
+        },
+        (error) => {
+          console.log("err post=", error);
+        }
+      );
+  }, []);
 
   const {
     setDataBarChart,
@@ -102,7 +97,6 @@ const Dashboard = () => {
     alignmentGeoChart,
     productsGeoChart,
     yearGeoChart,
-    amountRegistered,
     setAmountRegistered,
     layout,
   } = useContext(ChartsContext);
@@ -159,7 +153,13 @@ const Dashboard = () => {
       })
       .then(
         (result) => {
-          setDataLineChart(result);
+          const arr = result.map((country) => {
+            return {
+              id: country.Code,
+              data: [...country.Values_per_year],
+            };
+          });
+          setDataLineChart(arr);
         },
         (error) => {
           console.log("err post=", error);
@@ -183,6 +183,7 @@ const Dashboard = () => {
           (result) => {
             let values = [];
             let newData = result.map((c, index) => {
+              values.push(c.Sum);
               return {
                 id: c.Code,
                 value: c.Sum,
@@ -191,9 +192,8 @@ const Dashboard = () => {
             values = values.sort(function (a, b) {
               return a - b;
             });
-            let min = values[0];
             let max = values[values.length - 4];
-            setDataGeoChart((prev) => ({ data: newData, min, max }));
+            setDataGeoChart({ data: newData, max });
           },
           (error) => {
             console.log("err post=", error);
@@ -356,7 +356,7 @@ const Dashboard = () => {
                 p="5px 10px"
                 borderRadius="4px"
               >
-                ${transaction.Value}
+                ${Math.round(transaction.Value).toLocaleString("en-US")}
               </Box>
             </Box>
           ))}

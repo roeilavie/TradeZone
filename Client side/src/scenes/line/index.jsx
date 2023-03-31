@@ -57,13 +57,18 @@ const Line = () => {
       })
       .then(
         (result) => {
-          setDataLineChart(result);
+          const arr = result.map((country) => {
+            return {
+              id: country.Code,
+              data: [...country.Values_per_year],
+            };
+          });
+          setDataLineChart(arr);
         },
         (error) => {
           console.log("err post=", error);
         }
       );
-    // eslint-disable-next-line
   }, [alignmentLineChart, categoryLineChart, countriesLineChart]);
 
   return (

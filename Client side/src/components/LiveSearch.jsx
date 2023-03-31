@@ -38,9 +38,7 @@ const LiveSearch = ({ type, handleChange, chart }) => {
       let index = chart === "HistogramChart" ? 1 : 0;
       for (let i = 1990; i <= 2021; i++, index++) arr[index] = i;
       setResults(arr);
-    }
-    // eslint-disable-next-line
-    else {
+    } else {
       getCountries()
         .then((result) => {
           setResults(result);
@@ -49,7 +47,6 @@ const LiveSearch = ({ type, handleChange, chart }) => {
           console.error(error);
         });
     }
-    // eslint-disable-next-line
   }, []);
 
   //set the data in the inputs

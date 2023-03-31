@@ -15,7 +15,6 @@ export default function Context({ children }) {
   const [alignmentBarChart, setAlignmentBarChart] = useState("Export");
   const [countriesBarChart, setCountriesBarChart] = useState([CONST_REPORTER]);
 
-  const [dataLine, setDataLine] = useState([]);
   const [dataLineChart, setDataLineChart] = useState([]);
   const [categoryLineChart, setCategoryLineChart] = useState(CONST_CATEGORY);
   const [alignmentLineChart, setAlignmentLineChart] = useState("Export");
@@ -25,7 +24,6 @@ export default function Context({ children }) {
 
   const [dataGeoChart, setDataGeoChart] = useState({
     data: [],
-    min: 0,
     max: 1,
   });
   const [alignmentGeoChart, setAlignmentGeoChart] = useState("Export");
@@ -76,8 +74,6 @@ export default function Context({ children }) {
         setAlignmentLineChart,
         countriesBarChart,
         setCountriesBarChart,
-        dataLine,
-        setDataLine,
         categoryBarChart,
         setCategoryBarChart,
         categoryLineChart,

@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { createTheme } from "@mui/material/styles";
- 
+
 // color design tokens export
 export const tokens = () => ({
   grey: {
@@ -73,11 +73,6 @@ export const themeSettings = () => {
       secondary: {
         main: colors.greenAccent[500],
       },
-      neutral: {
-        dark: colors.grey[700],
-        main: colors.grey[500],
-        light: colors.grey[100],
-      },
       background: {
         default: colors.primary[500],
       },
@@ -113,7 +108,7 @@ export const themeSettings = () => {
   };
 };
 
-export const useMode = () => {
-  const theme = useMemo(() => createTheme(themeSettings()));
+export const useCurrentTheme = () => {
+  const theme = createTheme(themeSettings());
   return [theme];
 };

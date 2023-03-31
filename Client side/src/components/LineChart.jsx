@@ -1,27 +1,15 @@
 import { ResponsiveLine } from "@nivo/line";
 import { tokens } from "../theme";
 import { ChartsContext } from "../scenes/global/Context";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 
 const LineChart = ({ isDashboard = false }) => {
   const colors = tokens();
-  const { dataLineChart, dataLine, setDataLine } = useContext(ChartsContext);
-
-  // fit the data that we recived to the chart with dataLine
-  useEffect(() => {
-    const arr = dataLineChart.map((country) => {
-      return {
-        id: country.Code,
-        data: [...country.Values_per_year],
-      };
-    });
-    setDataLine(arr);
-    // eslint-disable-next-line
-  }, [dataLineChart]);
+  const { dataLineChart } = useContext(ChartsContext);
 
   return (
     <ResponsiveLine
-      data={dataLine}
+      data={dataLineChart}
       theme={{
         axis: {
           domain: {
@@ -55,7 +43,7 @@ const LineChart = ({ isDashboard = false }) => {
           },
         },
       }}
-      colors={{ scheme: "nivo" }} // added
+      colors={{ scheme: "nivo" }}
       margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
       xScale={{ type: "linear", min: "auto", max: "auto" }}
       yScale={{
@@ -70,17 +58,17 @@ const LineChart = ({ isDashboard = false }) => {
         tickSize: 0,
         tickPadding: 5,
         tickRotation: 0,
-        legend: isDashboard ? undefined : "Years", // added
+        legend: isDashboard ? undefined : "Years",
         legendOffset: 36,
         legendPosition: "middle",
       }}
       axisLeft={{
         orient: "left",
-        tickValues: 5, // added
+        tickValues: 5,
         tickSize: 3,
         tickPadding: 5,
         tickRotation: 0,
-        legend: isDashboard ? undefined : "Values in milions", // added
+        legend: isDashboard ? undefined : "Values in milions",
         legendOffset: -50,
         legendPosition: "middle",
       }}

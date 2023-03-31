@@ -226,7 +226,6 @@ export const deleteFavorite = (fav) => {
   });
 };
 
-// get all the products
 export const getAllUserFavorites = (userId) => {
   return new Promise((resolve, reject) => {
     fetch(`${api_production}/Favorites?userId=${userId}`, {

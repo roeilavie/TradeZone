@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import ForceGraph2D from "react-force-graph-2d";
 
 export default function Network(props) {

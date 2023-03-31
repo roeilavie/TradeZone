@@ -6,13 +6,12 @@ import { ChartsContext } from "../scenes/global/Context";
 import { getUser, insertUser } from "../data/ServiceFunctions";
 
 export default function SignWithGoogle() {
-  const { setUserLogged, userLogged, amountRegistered, setAmountRegistered } =
+  const { setUserLogged, amountRegistered, setAmountRegistered } =
     useContext(ChartsContext);
   const navigate = useNavigate(); // get history from react-router
   const dashboard = () => navigate("/"); // navigate to login page on button click
-  useEffect(() => {
-  }, [amountRegistered])
-  
+  useEffect(() => {}, [amountRegistered]);
+
   return (
     <GoogleLogin
       onSuccess={(credentialResponse) => {
@@ -33,7 +32,7 @@ export default function SignWithGoogle() {
             let numRegistered = amountRegistered + 1;
             setAmountRegistered((prev) => prev + 1);
             let user = {
-              UserId:numRegistered,
+              UserId: numRegistered,
               FirstName: googleUser.given_name,
               Email: googleUser.email,
               LastName: googleUser.family_name,
@@ -49,10 +48,9 @@ export default function SignWithGoogle() {
               Image: googleUser.picture,
             });
             console.log(user);
-            localStorage.setItem("user",JSON.stringify(user));
+            localStorage.setItem("user", JSON.stringify(user));
             dashboard();
-          }
-           else {
+          } else {
             //The user exist already in our DB, so we will set him as logged.
             setUserLogged({
               UserId: returnedUser.UserId,
@@ -63,7 +61,7 @@ export default function SignWithGoogle() {
               Image: googleUser.picture,
             });
             returnedUser.Image = googleUser.picture;
-            localStorage.setItem("user",JSON.stringify(returnedUser));
+            localStorage.setItem("user", JSON.stringify(returnedUser));
             dashboard();
           }
         });

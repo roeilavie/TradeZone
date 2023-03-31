@@ -13,14 +13,14 @@ import FAQ from "./scenes/faq";
 import Geography from "./scenes/geography";
 import Network from "./scenes/network";
 import { CssBaseline, ThemeProvider } from "@mui/material";
-import { useMode } from "./theme";
+import { useCurrentTheme } from "./theme";
 import Context from "./scenes/global/Context";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Favorites from "./components/Favorites";
 
 function App() {
-  const [theme] = useMode();
+  const [theme] = useCurrentTheme();
   const [isSidebar, setIsSidebar] = useState(true);
   return (
     <ThemeProvider theme={theme}>

@@ -108,7 +108,7 @@ const Histogram = () => {
     <Box m="20px">
       <Header
         title="Histogram Chart"
-        subtitle="Comparison & investigate with Histogram Chart"
+        subtitle="Explore trends in the world by using Histogram Chart"
       />
       <Box display="flex" justifyContent="space-evenly" alignItems="center">
         <LiveSearch

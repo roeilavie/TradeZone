@@ -17,9 +17,7 @@ export default function MultipleSelect(props) {
         .catch((error) => {
           console.error(error);
         });
-    }
-    // eslint-disable-next-line
-    else {
+    } else {
       getCountries()
         .then((result) => {
           setResults(result);
@@ -28,7 +26,6 @@ export default function MultipleSelect(props) {
           console.error(error);
         });
     }
-    // eslint-disable-next-line
   }, []);
 
   return (

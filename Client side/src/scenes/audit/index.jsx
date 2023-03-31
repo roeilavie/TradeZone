@@ -131,8 +131,6 @@ const Search = () => {
         "Please fill at least one of the fields (Reporter/Partner/Product/Year)."
       );
 
-    console.log(`${api_production}/` + url);
-
     fetch(`${api_production}/` + url, {
       method: "GET",
       headers: new Headers({

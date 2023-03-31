@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom"; // import useHistory
 import { ChartsContext } from "./Context";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import LogoutIcon from "@mui/icons-material/Logout";
+
 const Topbar = () => {
   const navigate = useNavigate(); // get history from react-router
   const { userLogged, setUserLogged } = useContext(ChartsContext);

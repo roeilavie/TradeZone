@@ -2,10 +2,18 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Button from "@mui/material/Button";
 import { tokens } from "../theme";
-
 import { Fragment, useState } from "react";
-const nodesColors = ['gray', "yellow", 'red', 'green',
-              'blue', 'pink', 'orange', 'brown'];
+
+const nodesColors = [
+  "gray",
+  "yellow",
+  "red",
+  "green",
+  "blue",
+  "pink",
+  "orange",
+  "brown",
+];
 const colors = tokens();
 const style = {
   position: "absolute",
@@ -21,6 +29,7 @@ const style = {
   px: 4,
   pb: 3,
 };
+
 function ChildModal(props) {
   const [open, setOpen] = useState(false);
   const handleOpen = (e) => {
@@ -33,35 +42,36 @@ function ChildModal(props) {
   return (
     <Fragment>
       {props.data.map((com) => (
-        <span key={com.group}><Button
-        sx={{
-          backgroundColor: colors.blueAccent[700],
-          color: colors.grey[100],
-          fontWeight: "bold",
-        }}
-        value={com.group}
-        onClick={handleOpen}
-      >
-        {" "}
-        {com.group + " - " + nodesColors[com.group]}{" "}
-      </Button>&nbsp;&nbsp;</span>
-        
-      ))}
-      <Modal hideBackdrop open={open} onClose={handleClose}>
-        <Box sx={{ ...style, width: 200 }}>
-          <h2>Community {currentComm.group}</h2>
-          <p>Europe : {currentComm.data['Europe']}%</p>
-          <p>Americas : {currentComm.data['Americas']}%</p>
-          <p>Asia : {currentComm.data['Asia']}%</p>
-          <p>Africa : {currentComm.data['Africa']}%</p>
-          <p>Oceania : {currentComm.data['Oceania']}%</p>
-          <p>{currentComm.data['Total']} countries</p>
+        <span key={com.group}>
           <Button
             sx={{
               backgroundColor: colors.blueAccent[700],
               color: colors.grey[100],
               fontWeight: "bold",
-              
+            }}
+            value={com.group}
+            onClick={handleOpen}
+          >
+            {" "}
+            {com.group + " - " + nodesColors[com.group]}{" "}
+          </Button>
+          &nbsp;&nbsp;
+        </span>
+      ))}
+      <Modal hideBackdrop open={open} onClose={handleClose}>
+        <Box sx={{ ...style, width: 200 }}>
+          <h2>Community {currentComm.group}</h2>
+          <p>Europe : {currentComm.data["Europe"]}%</p>
+          <p>Americas : {currentComm.data["Americas"]}%</p>
+          <p>Asia : {currentComm.data["Asia"]}%</p>
+          <p>Africa : {currentComm.data["Africa"]}%</p>
+          <p>Oceania : {currentComm.data["Oceania"]}%</p>
+          <p>{currentComm.data["Total"]} countries</p>
+          <Button
+            sx={{
+              backgroundColor: colors.blueAccent[700],
+              color: colors.grey[100],
+              fontWeight: "bold",
             }}
             onClick={handleClose}
           >

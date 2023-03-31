@@ -4,28 +4,28 @@ import { ChartsContext } from "../scenes/global/Context";
 import { getAllUserFavorites } from "../data/ServiceFunctions";
 import { useNavigate } from "react-router-dom";
 import Header from "./Header";
+import { Box } from "@mui/material";
 
-//const url = `https://newsapi.org/v2/top-headlines?country=us&category=${category}&apiKey=baa59cfa2f64449ab76cf4d1b718714f`;
 export default function Favorites() {
-  const {userLogged} = useContext(ChartsContext);
+  const { userLogged } = useContext(ChartsContext);
   const [items, setItems] = useState([]);
+
   //Use effect get all the user's favorites
   const navigate = useNavigate();
   useEffect(() => {
-    if(!userLogged.IsLogged) navigate('/');
-    getAllUserFavorites(userLogged.UserId).then((result) =>{
+    if (!userLogged.IsLogged) navigate("/");
+    getAllUserFavorites(userLogged.UserId).then((result) => {
       // Changing prop name using dot notation to match the item format in the NewsGrid component.
       result = changeObjProps(result);
-      console.log(result);
       setItems(result);
-    })
+    });
   }, []);
 
   return (
-    <div>
+    <Box m="20px">
       <Header title="My Favorites" subtitle="Articles that I added" />
-      {items.length > 0 && <NewsGrid items={items} defaultClicked={true}/>}
-    </div>
+      {items.length > 0 && <NewsGrid items={items} defaultClicked={true} />}
+    </Box>
   );
 }
 
@@ -55,4 +55,4 @@ const changeObjProps = (arr) => {
     delete item.Picture;
   });
   return arr;
-}
+};

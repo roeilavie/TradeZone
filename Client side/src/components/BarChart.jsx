@@ -3,7 +3,7 @@ import { tokens } from "../theme";
 import { ChartsContext } from "../scenes/global/Context";
 import { useContext } from "react";
 
-const BarChart = ({ isDashboard = false, layout }) => {
+const BarChart = ({ layout }) => {
   const colors = tokens();
   const { dataBarChart } = useContext(ChartsContext);
 
@@ -11,7 +11,6 @@ const BarChart = ({ isDashboard = false, layout }) => {
     <ResponsiveBar
       data={dataBarChart}
       theme={{
-        // added
         axis: {
           domain: {
             line: {

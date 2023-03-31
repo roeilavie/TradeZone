@@ -79,7 +79,7 @@ const Geography = () => {
       .then(
         (result) => {
           if (result.length < 1) {
-            setDataGeoChart({ data: [], min: 0, max: 1 });
+            setDataGeoChart({ data: [], max: 1 });
             clearInterval(interval.current);
             setText("Start Animation");
           }
@@ -94,9 +94,8 @@ const Geography = () => {
           values = values.sort(function (a, b) {
             return a - b;
           });
-          let min = values[0];
           let max = values[values.length - 4];
-          setDataGeoChart((prev) => ({ data: newData, min, max }));
+          setDataGeoChart({ data: newData, max });
         },
         (error) => {
           console.log("err post=", error);
