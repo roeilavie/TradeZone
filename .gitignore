@@ -350,4 +350,4 @@ MigrationBackup/
 .ionide/
 
 .DS_Store
-Web.config
+Web
