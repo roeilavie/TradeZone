@@ -13,7 +13,6 @@ import { ChartsContext } from "../global/Context";
 import { api_production } from "../../service/service";
 import {
   getCountries,
-  getNumOfRegistered,
   getProducts,
   getTotalTransactions,
 } from "../../data/ServiceFunctions";
@@ -49,14 +48,6 @@ const Dashboard = () => {
     getProducts()
       .then((products) => {
         setNumOfProducts(products.length);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-
-    getNumOfRegistered()
-      .then((number) => {
-        setAmountRegistered(number);
       })
       .catch((error) => {
         console.error(error);

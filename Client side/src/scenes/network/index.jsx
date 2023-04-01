@@ -46,7 +46,6 @@ export default function index() {
         break;
 
       case "Americas":
-        console.log(value, name);
         setNodesSize((prev) => ({
           europe: prev.europe,
           americas: value,

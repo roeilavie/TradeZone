@@ -3,15 +3,11 @@ import { Formik } from "formik";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "./Header";
 import { ChartsContext } from "../scenes/global/Context";
-
-import { useContext, useState } from "react";
+import { getNumOfRegistered } from "../data/ServiceFunctions";
+import { useContext, useEffect, useState } from "react";
 import { validateEmail } from "../service/service";
 import Swal from "sweetalert2";
-import {
-  checkEmailExist,
-  dashboard,
-  insertUser,
-} from "../data/ServiceFunctions";
+import { checkEmailExist, insertUser } from "../data/ServiceFunctions";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
@@ -25,6 +21,15 @@ export default function Register() {
   const handleMouseDownPassword = (event) => event.preventDefault();
   const { setUserLogged, amountRegistered, setAmountRegistered } =
     useContext(ChartsContext);
+  useEffect(() => {
+    getNumOfRegistered()
+      .then((number) => {
+        setAmountRegistered(number);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
   const handleFormSubmit = (values) => {
     if (!validEmail) {
       Swal.fire({

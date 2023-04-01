@@ -3,14 +3,22 @@ import { GoogleLogin } from "@react-oauth/google";
 import jwt_decode from "jwt-decode";
 import { useNavigate } from "react-router-dom"; // import useHistory
 import { ChartsContext } from "../scenes/global/Context";
-import { getUser, insertUser } from "../data/ServiceFunctions";
+import { getUser, insertUser,getNumOfRegistered } from "../data/ServiceFunctions";
 
 export default function SignWithGoogle() {
   const { setUserLogged, amountRegistered, setAmountRegistered } =
     useContext(ChartsContext);
   const navigate = useNavigate(); // get history from react-router
   const dashboard = () => navigate("/"); // navigate to login page on button click
-  useEffect(() => {}, [amountRegistered]);
+  useEffect(() => {
+    getNumOfRegistered()
+    .then((number) => {
+      setAmountRegistered(number);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  }, []);
 
   return (
     <GoogleLogin
@@ -47,7 +55,6 @@ export default function SignWithGoogle() {
               IsLogged: true,
               Image: googleUser.picture,
             });
-            console.log(user);
             localStorage.setItem("user", JSON.stringify(user));
             dashboard();
           } else {
