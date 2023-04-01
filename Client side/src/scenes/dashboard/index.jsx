@@ -286,7 +286,7 @@ const Dashboard = () => {
                 fontWeight="bold"
                 color={colors.greenAccent[500]}
               >
-                Export of products over the years
+                Export/Import of products on timeline
               </Typography>
             </Box>
             <Box>
@@ -365,7 +365,7 @@ const Dashboard = () => {
             fontWeight="600"
             sx={{ padding: "30px 30px 0 30px" }}
           >
-            Sales Quantity Specific Year
+            Trades comparison between countries
           </Typography>
           <Box height="250px" mt="-20px" className="chart">
             {showBarChart && <BarChart isDashboard={true} layout={layout} />}
