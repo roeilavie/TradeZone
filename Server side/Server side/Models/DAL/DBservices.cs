@@ -265,6 +265,29 @@ namespace Server_side.Models
             return trades;
         }
 
+        // Read by IND + YEAR + Percentage
+        public static List<Trade> GetByIndYearAndPercentage(string ind, int year, int percentage)
+        {
+            SqlConnection con = Connect();
+            SqlCommand command = CreateReadByIndYearAndPercentageCommand(con, "spGetTradesByPercentage", ind, year, percentage);
+            SqlDataReader dr = command.ExecuteReader(CommandBehavior.CloseConnection);
+            List<Trade> trades = new List<Trade>();
+
+            while (dr.Read())
+            {
+                string couISO = dr["COU"].ToString();
+                string parISO = dr["PAR"].ToString();
+                string indicator = dr["IND"].ToString();
+                float value = Convert.ToSingle(dr["Value"]);
+                long tradeId = long.Parse(dr["ID"].ToString());
+
+                trades.Add(new Trade(couISO, parISO, indicator, year, value, tradeId));
+            }
+
+            con.Close();
+            return trades;
+        }
+
         // Read by COU/PAR + YEAR + FLOW
         public static List<Trade> ReadByCOU(string cou, char flow, int year)
         {
@@ -338,6 +361,20 @@ namespace Server_side.Models
             SqlCommand command = new SqlCommand();
             command.Parameters.AddWithValue("@ind", ind);
             command.Parameters.AddWithValue("@year", year);
+            command.CommandText = text;
+            command.Connection = con;
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.CommandTimeout = 10; // in seconds
+            return command;
+        }
+
+        // Create read command for IND + YEAR + Percentage
+        private static SqlCommand CreateReadByIndYearAndPercentageCommand(SqlConnection con, string text, string ind, int year, int percentage)
+        {
+            SqlCommand command = new SqlCommand();
+            command.Parameters.AddWithValue("@ind", ind);
+            command.Parameters.AddWithValue("@year", year);
+            command.Parameters.AddWithValue("@percentage", percentage);
             command.CommandText = text;
             command.Connection = con;
             command.CommandType = System.Data.CommandType.StoredProcedure;

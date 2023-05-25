@@ -1,90 +1,131 @@
 import { useEffect, useState } from "react";
 import Network from "../../components/NetworkChart";
-import { CONST_CATEGORY, CONST_YEAR } from "../../data/ConstVariables";
-import { Box } from "@mui/material";
+import {
+  CONST_CATEGORY,
+  CONST_YEAR,
+  CONST_REPORTER,
+} from "../../data/ConstVariables";
+import { Box, Button, Typography } from "@mui/material";
 import LiveSearch from "../../components/LiveSearch";
-import NumberTextField from "../../components/NumberTextField";
 import Header from "../../components/Header";
 import { tokens } from "../../theme";
 import CommunityModal from "../../components/CommunityModal";
 import { api_python, api_production } from "../../service/service";
 import { getCountries } from "../../data/ServiceFunctions";
+import NumberTextField from "../../components/NumberTextField";
+import NetworkLegends from "../../components/NetworkLegends";
+import StateModal from "../../components/StateModal";
 
 export default function index() {
   const [year, setYear] = useState(CONST_YEAR);
   const [product, setProduct] = useState(CONST_CATEGORY);
+  const [percentage, setPercentage] = useState(100);
+  const [first, setFirst] = useState(false);
+  const [countries, setCountries] = useState({ size: 199, ind: "" });
   const [sendData, setSendData] = useState({ countries: [], trades: [] });
+  const [communitiesBtn, setCommunitiesBtn] = useState(false);
+  const [countrySelected, setCountrySelected] = useState(false);
+  const [country, setCountry] = useState(CONST_REPORTER);
+  const [statesTreeMap, setStatesTreeMap] = useState({});
+  const [communitiesSelection, setCommunitiesSelection] = useState([
+    0, 1, 2, 3,
+  ]);
   const [networkData, setNetworkData] = useState({
     data: { nodes: [], edges: [] },
     communitiesInfo: [],
     modularity: 0,
   });
   const colors = tokens();
-  const [nodesSize, setNodesSize] = useState({
-    europe: 14,
-    americas: 11,
-    asia: 8,
-    africa: 5,
-    oceania: 2,
-  });
 
-  const liveSearchChange = (value, type) => {
-    if (type === "category") setProduct(value);
-    else setYear(value);
-  };
-
-  const numberTextFieldChange = (value, name) => {
+  const continentsToNumbers = (name) => {
+    let value = 0;
     switch (name) {
+      case "Africa":
+        value = 1;
+        break;
+
+      case "Oceania":
+        value = 2;
+        break;
+
       case "Europe":
-        setNodesSize((prev) => ({
-          europe: value,
-          americas: prev.americas,
-          asia: prev.asia,
-          africa: prev.africa,
-          oceania: prev.oceania,
-        }));
+        value = 3;
         break;
 
       case "Americas":
-        setNodesSize((prev) => ({
-          europe: prev.europe,
-          americas: value,
-          asia: prev.asia,
-          africa: prev.africa,
-          oceania: prev.oceania,
-        }));
+        value = 4;
         break;
 
       case "Asia":
-        setNodesSize((prev) => ({
-          europe: prev.europe,
-          americas: prev.americas,
-          asia: value,
-          africa: prev.africa,
-          oceania: prev.oceania,
-        }));
-        break;
-
-      case "Africa":
-        setNodesSize((prev) => ({
-          europe: prev.europe,
-          americas: prev.americas,
-          asia: prev.asia,
-          africa: value,
-          oceania: prev.oceania,
-        }));
-        break;
-
-      default:
-        setNodesSize((prev) => ({
-          europe: prev.europe,
-          americas: prev.americas,
-          asia: prev.asia,
-          africa: prev.africa,
-          oceania: value,
-        }));
+        value = 5;
         break;
     }
+    return value;
+  };
+
+  const getCountryLinks = (country) => {
+    setCountrySelected(true);
+    const countriesLinks =
+      communitiesBtn == true
+        ? networkData.communitiesInfo[country.group - 1].edges.filter(
+            (cou) =>
+              cou.target.code === country.code ||
+              cou.source.code === country.code
+          )
+        : networkData.data.edges.filter(
+            (cou) =>
+              cou.target.code === country.code ||
+              cou.source.code === country.code
+          );
+
+    const formattedData = countriesLinks.map((cou) => {
+      if (cou.target.code === country.code) {
+        return {
+          name: cou.source.code,
+          size: Math.log(cou.value),
+          continent: continentsToNumbers(cou.source.continent),
+          fullname: cou.source.name,
+        };
+      } else if (cou.source.code === country.code) {
+        return {
+          name: cou.target.code,
+          size: Math.log(cou.value),
+          continent: continentsToNumbers(cou.target.continent),
+          fullname: cou.target.name,
+        };
+      }
+    });
+    formattedData.sort((a, b) => b.size - a.size);
+    setStatesTreeMap(formattedData);
+  };
+
+  const liveSearchChange = (value, type) => {
+    switch (type) {
+      case "category":
+        setProduct(value);
+        break;
+
+      case "year":
+        setYear(value);
+        break;
+
+      case "country":
+        setCountry(value);
+        break;
+    }
+  };
+
+  const numberTextFieldChange = (value, name) => {
+    setPercentage(parseInt(value));
+  };
+
+  const getNextCommunityIndex = (index) => {
+    let newCommunitiesSelection = [...communitiesSelection];
+    let value =
+      (communitiesSelection[index] + 1) %
+      (networkData.communitiesInfo.length + 1);
+    newCommunitiesSelection[index] = value;
+    setCommunitiesSelection(newCommunitiesSelection);
   };
 
   useEffect(() => {
@@ -98,40 +139,108 @@ export default function index() {
   }, []);
 
   useEffect(() => {
-    if (
-      product === null ||
-      year === null ||
-      year === undefined ||
-      product === undefined
-    )
-      return;
-
-    fetch(`${api_production}/Trades?year=${year}&ind=${product.Code}`, {
-      method: "GET",
-      headers: new Headers({
-        "Content-Type": "application/json; charset=UTF-8",
-        Accept: "application/json; charset=UTF-8",
-      }),
-    })
-      .then((res) => {
-        return res.json();
-      })
-      .then(
-        (result) => {
-          setSendData((prev) => ({
-            countries: prev.countries,
-            trades: result,
-          }));
+    if (networkData.data.nodes.length > 0 && country !== null) {
+      let newNetworkData = {
+        data: {
+          nodes: networkData.data.nodes,
+          edges: networkData.data.edges,
+          selected: country.Name,
         },
-        (error) => {
-          console.log("err GET=", error);
+        communitiesInfo: networkData.communitiesInfo,
+        modularity: networkData.modularity,
+      };
+      setNetworkData(newNetworkData);
+    }
+  }, [country]);
+
+  useEffect(() => {
+    if (product === null || year === null) return;
+
+    if (percentage == 100)
+      fetch(`${api_production}/Trades?year=${year}&ind=${product.Code}`, {
+        method: "GET",
+        headers: new Headers({
+          "Content-Type": "application/json; charset=UTF-8",
+          Accept: "application/json; charset=UTF-8",
+        }),
+      })
+        .then((res) => {
+          return res.json();
+        })
+        .then(
+          (result) => {
+            setSendData((prev) => ({
+              countries: prev.countries,
+              trades: result,
+            }));
+          },
+          (error) => {
+            console.log("err GET=", error);
+          }
+        );
+    else {
+      let numOfCountries = Math.floor((1 / 100) * percentage * countries.size);
+      fetch(
+        `${api_production}/Trades?year=${year}&ind=${product.Code}&percentage=${numOfCountries}`,
+        {
+          method: "GET",
+          headers: new Headers({
+            "Content-Type": "application/json; charset=UTF-8",
+            Accept: "application/json; charset=UTF-8",
+          }),
         }
-      );
+      )
+        .then((res) => {
+          return res.json();
+        })
+        .then(
+          (result) => {
+            setSendData((prev) => ({
+              countries: prev.countries,
+              trades: result,
+            }));
+          },
+          (error) => {
+            console.log("err GET=", error);
+          }
+        );
+    }
+  }, [percentage]);
+
+  useEffect(() => {
+    if (product === null || year === null) return;
+
+    if (percentage == 100 && first)
+      fetch(`${api_production}/Trades?year=${year}&ind=${product.Code}`, {
+        method: "GET",
+        headers: new Headers({
+          "Content-Type": "application/json; charset=UTF-8",
+          Accept: "application/json; charset=UTF-8",
+        }),
+      })
+        .then((res) => {
+          return res.json();
+        })
+        .then(
+          (result) => {
+            setSendData((prev) => ({
+              countries: prev.countries,
+              trades: result,
+            }));
+          },
+          (error) => {
+            console.log("err GET=", error);
+          }
+        );
+    else {
+      setFirst(true);
+      setPercentage(100);
+    }
   }, [product, year]);
 
   useEffect(() => {
-    if (sendData.countries.length > 0 && sendData.trades.length > 0)
-      fetch(`${api_python}`, {
+    if (sendData.countries.length > 0 && sendData.trades.length > 0) {
+      fetch(`${api_python}/newman`, {
         method: "POST",
         body: JSON.stringify(sendData),
         headers: { "Content-Type": "application/json" },
@@ -141,16 +250,25 @@ export default function index() {
         })
         .then(
           (result) => {
+            console.log(result);
             setNetworkData(result);
+            setCountries((prev) =>
+              prev.ind !== product.Code
+                ? { size: result.data.nodes.length, ind: product.Code }
+                : prev
+            );
           },
           (error) => {
             console.log("err post=", error);
           }
         );
+    }
   }, [sendData]);
 
+  useEffect(() => {}, [communitiesSelection]);
+
   return (
-    <Box m="20px">
+    <Box m="20px" width={1570}>
       <Header
         title="Network"
         subtitle="Detect communities with Network Chart"
@@ -158,46 +276,128 @@ export default function index() {
       <Box display="flex" justifyContent="space-evenly" alignItems="center">
         <LiveSearch type="year" handleChange={liveSearchChange} />
         <LiveSearch type="category" handleChange={liveSearchChange} />
-        <NumberTextField
-          name="Europe"
-          value={nodesSize.europe}
-          handleChange={numberTextFieldChange}
-        />
-        <NumberTextField
-          name="Americas"
-          value={nodesSize.americas}
-          handleChange={numberTextFieldChange}
-        />
-        <NumberTextField
-          name="Asia"
-          value={nodesSize.asia}
-          handleChange={numberTextFieldChange}
-        />
-        <NumberTextField
-          name="Africa"
-          value={nodesSize.africa}
-          handleChange={numberTextFieldChange}
-        />
-        <NumberTextField
-          name="Oceania"
-          value={nodesSize.oceania}
-          handleChange={numberTextFieldChange}
-        />
+        <LiveSearch type="country" handleChange={liveSearchChange} />
+        <Box width="8%" textAlign="center">
+          <NumberTextField
+            type="Number of countries (%)"
+            value={percentage}
+            handleChange={numberTextFieldChange}
+          />
+        </Box>
+        <Button
+          sx={{
+            backgroundColor: colors.blueAccent[700],
+            color: colors.grey[100],
+            fontWeight: "bold",
+          }}
+          onClick={() => setCommunitiesBtn((prev) => !prev)}
+        >
+          {!communitiesBtn ? "Communities" : "Network"}
+        </Button>
+        <NetworkLegends color={colors.blueAccent[700]} />
       </Box>{" "}
       <br />
       <Box
+        ml="20px"
         height={800}
         width={1520}
-        border={`1px solid ${colors.grey[100]}`}
+        border={!communitiesBtn ? `1px solid ${colors.grey[100]}` : ""}
         borderRadius="4px"
         className="chart"
       >
-        <CommunityModal
-          data={networkData.communitiesInfo}
-          modularity={networkData.modularity}
-        />
-        <Network data={networkData.data} nodesSize={nodesSize} />
+        {communitiesBtn ? (
+          <div
+            style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}
+          >
+            {[0, 1, 2, 3].map((index) => (
+              <Box
+                height={"50%"}
+                width={"50%"}
+                border={`1px solid ${colors.grey[100]}`}
+                borderRadius="10px"
+                key={index}
+              >
+                <Box
+                  flexDirection={"row"}
+                  display={"flex"}
+                  width={"60%"}
+                  justifyContent={"space-between"}
+                >
+                  <Button
+                    sx={{
+                      backgroundColor: colors.blueAccent[700],
+                      color: colors.grey[100],
+                      fontWeight: "bold",
+                    }}
+                    onClick={(e) => getNextCommunityIndex(index)}
+                  >
+                    Next community
+                  </Button>
+                  <Typography color={colors.grey[100]} variant="h5">
+                    {networkData.communitiesInfo[
+                      communitiesSelection[index]
+                    ] !== undefined
+                      ? networkData.communitiesInfo[communitiesSelection[index]]
+                          .networkType
+                      : networkData.data.networkType}
+                  </Typography>
+                </Box>
+                <Network
+                  getCountryLinks={getCountryLinks}
+                  data={
+                    networkData.communitiesInfo[communitiesSelection[index]] !==
+                    undefined
+                      ? {
+                          nodes:
+                            networkData.communitiesInfo[
+                              communitiesSelection[index]
+                            ].nodes,
+                          edges:
+                            networkData.communitiesInfo[
+                              communitiesSelection[index]
+                            ].edges,
+                          selected: country.Name,
+                        }
+                      : networkData.data
+                  }
+                  height={600}
+                  width={760}
+                />
+              </Box>
+            ))}
+          </div>
+        ) : (
+          <div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <div>
+                <CommunityModal
+                  data={networkData.communitiesInfo}
+                  modularity={networkData.modularity}
+                />
+              </div>
+            </div>
+            <Network
+              data={networkData.data}
+              height={800}
+              width={1520}
+              getCountryLinks={getCountryLinks}
+            />
+          </div>
+        )}
       </Box>
+      {countrySelected && (
+        <StateModal
+          open={countrySelected}
+          setCountrySelected={setCountrySelected}
+          data={statesTreeMap}
+        />
+      )}
     </Box>
   );
 }

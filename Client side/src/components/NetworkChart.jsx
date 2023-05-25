@@ -12,15 +12,11 @@ export default function Network(props) {
     "orange",
     "brown",
   ];
+
   const nodes = props.data.nodes;
   const links = props.data.edges;
-  const sizes = {
-    Europe: props.nodesSize.europe,
-    Americas: props.nodesSize.americas,
-    Asia: props.nodesSize.asia,
-    Africa: props.nodesSize.africa,
-    Oceania: props.nodesSize.oceania,
-  };
+  const selected = props.data.selected;
+  const supplement = 10;
   const forceRef = useRef(null);
 
   useEffect(() => {
@@ -30,11 +26,82 @@ export default function Network(props) {
   return (
     <div>
       <ForceGraph2D
-        height={800}
-        width={1520}
+        height={props.height}
+        onNodeClick={(country) => props.getCountryLinks(country)}
+        width={props.width}
         ref={forceRef}
+        linkWidth={1}
+        nodeCanvasObject={(node, ctx, globalScale) => {
+          if (node.continent == "Europe") {
+            // Circle
+            ctx.beginPath();
+            ctx.arc(
+              node.x,
+              node.y,
+              10 + supplement * node.degree,
+              0,
+              2 * Math.PI
+            );
+            ctx.fillStyle =
+              selected === node.name ? "black" : nodesColors[node.group];
+            ctx.fill();
+          } else if (node.continent == "Americas") {
+            // Rectangle
+            ctx.fillRect(
+              node.x - 12,
+              node.y - 12,
+              30 + supplement * node.degree,
+              15 + supplement * node.degree
+            );
+            ctx.fillStyle =
+              selected === node.name ? "black" : nodesColors[node.group];
+          } else if (node.continent == "Asia") {
+            // Triangle
+            ctx.beginPath();
+            ctx.moveTo(node.x, node.y - (12 + supplement * node.degree));
+            ctx.lineTo(
+              node.x + (12 + supplement * node.degree),
+              node.y + (12 + supplement * node.degree)
+            );
+            ctx.lineTo(
+              node.x - (12 + supplement * node.degree),
+              node.y + (12 + supplement * node.degree)
+            );
+            ctx.closePath();
+            ctx.fillStyle =
+              selected === node.name ? "black" : nodesColors[node.group];
+            ctx.fill();
+          } else if (node.continent == "Africa") {
+            // Pentagon
+            ctx.beginPath();
+            const sideLength = 12 + supplement * node.degree;
+            const angle = (2 * Math.PI) / 5; // Angle between consecutive vertices of a regular pentagon
+            for (let i = 0; i < 5; i++) {
+              const x = node.x + sideLength * Math.cos(i * angle);
+              const y = node.y + sideLength * Math.sin(i * angle);
+              if (i === 0) {
+                ctx.moveTo(x, y);
+              } else {
+                ctx.lineTo(x, y);
+              }
+            }
+            ctx.closePath();
+            ctx.fillStyle =
+              selected === node.name ? "black" : nodesColors[node.group];
+            ctx.fill();
+          } else {
+            // Oceania , Square
+            ctx.fillRect(
+              node.x - 15,
+              node.y - 15,
+              25 + supplement * node.degree,
+              25 + supplement * node.degree
+            );
+            ctx.fillStyle =
+              selected === node.name ? "black" : nodesColors[node.group];
+          }
+        }}
         graphData={{ nodes, links }}
-        nodeColor={(node) => nodesColors[node.group]}
         nodeLabel={(node) => node.name + ", " + node.continent}
         linkLabel={(link) =>
           "From : " +
@@ -47,9 +114,6 @@ export default function Network(props) {
         }
         linkDirectionalArrowLength={0}
         linkDirectionalArrowRdelPos={1}
-        nodeVal={(node) =>
-          node.continent !== undefined ? sizes[node.continent] : 0
-        }
         enableNodeDrag={false}
       />
     </div>

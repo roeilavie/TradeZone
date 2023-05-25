@@ -21,6 +21,7 @@ export default function NewsItem({ item, defaultClicked, handleFavorites }) {
     setIsClicked(true);
     //Insert favorites to DB
 
+    console.log(item);
     let fav = {
       Author: item.author != null ? item.author : "",
       Content: item.content !== null ? item.content : "",
@@ -35,6 +36,7 @@ export default function NewsItem({ item, defaultClicked, handleFavorites }) {
       UserId: userLogged.UserId,
       Title: item.title !== null ? item.title : "",
     };
+    console.log(fav);
     insertFavoriteToUser(fav).then((result) => {
       if (result != 1) {
         Swal.fire({

@@ -13,6 +13,7 @@ import { ChartsContext } from "../global/Context";
 import { api_production } from "../../service/service";
 import {
   getCountries,
+  getNumOfRegistered,
   getProducts,
   getTotalTransactions,
 } from "../../data/ServiceFunctions";
@@ -48,6 +49,14 @@ const Dashboard = () => {
     getProducts()
       .then((products) => {
         setNumOfProducts(products.length);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+    getNumOfRegistered()
+      .then((number) => {
+        setAmountRegistered(number);
       })
       .catch((error) => {
         console.error(error);
@@ -286,7 +295,7 @@ const Dashboard = () => {
                 fontWeight="bold"
                 color={colors.greenAccent[500]}
               >
-                Export/Import of products on timeline
+                {alignmentLineChart} of products over the years
               </Typography>
             </Box>
             <Box>
@@ -365,7 +374,7 @@ const Dashboard = () => {
             fontWeight="600"
             sx={{ padding: "30px 30px 0 30px" }}
           >
-            Trades comparison between countries
+            Sales Quantity Specific Year
           </Typography>
           <Box height="250px" mt="-20px" className="chart">
             {showBarChart && <BarChart isDashboard={true} layout={layout} />}
