@@ -110,7 +110,7 @@ export default function index() {
         break;
 
       case "country":
-        setCountry(value);
+        value !== null ? setCountry(value) : setCountry("");
         break;
     }
   };
