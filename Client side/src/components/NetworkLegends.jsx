@@ -160,7 +160,7 @@ const TriangleLegend = ({ color }) => {
       >
         <path d="M5.5 19H18.5L12 5.5L5.5 19Z" fill={color} />
       </svg>
-      <span style={{ color: "white", marginLeft: 15, marginTop: 6 }}>Asia</span>
+      <span style={{ color: "white", marginLeft: 15, marginTop: 4 }}>Asia</span>
     </div>
   );
 };
