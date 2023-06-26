@@ -1,4 +1,6 @@
 ##
+import math
+
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import networkx as nx
@@ -113,28 +115,35 @@ def determine_network_type(nodes, links):
 
     # Calculate average path length
     avg_path_length = nx.average_shortest_path_length(G)
-
     # Calculate clustering coefficient
     clustering_coefficient = nx.average_clustering(G)
 
-    # Determine if it's a small-world network
+    # Determine if it's a scale-free network
     degree_sequence = sorted([d for n, d in G.degree()], reverse=True)
     if degree_sequence[1] == 1:
         return "This network is Scale-Free"
 
-    random_graph = nx.random_reference(G, niter=100, connectivity=False)
-    random_avg_path_length = nx.average_shortest_path_length(random_graph)
-    random_clustering_coefficient = nx.average_clustering(random_graph)
-
-    if avg_path_length < random_avg_path_length and clustering_coefficient >= random_clustering_coefficient:
-        return "This network is Small-World"
-
     # Determine if it's a scale-free network
+    degree_sequence = [degree for _, degree in G.degree()]
     fit = powerlaw.Fit(degree_sequence)
-    alpha = fit.alpha
+    alpha = fit.power_law.alpha
+    R, p = fit.distribution_compare('power_law', 'exponential')
+    normalized_value = 1 - ((p - 0) / (0.05 - 0))
+    print(normalized_value, p)
+    if normalized_value > 0.09:
+        return "This network is Scale-Free " + str(normalized_value) + " , p=" + str(p)
 
-    if alpha > 2:
-        return "This network is Scale-Free"
+    # Determine if it's a small-world network
+    random_graph1 = nx.random_reference(G, niter=100, connectivity=False)
+    # random_avg_path_length = nx.average_shortest_path_length(random_graph1)
+    random_clustering_coefficient1 = nx.average_clustering(random_graph1)
+    random_graph2 = nx.random_reference(G, niter=100, connectivity=False)
+    # random_avg_path_length = nx.average_shortest_path_length(random_graph2)
+    random_clustering_coefficient2 = nx.average_clustering(random_graph2)
+
+    if avg_path_length <= math.log(
+            len(G)) and clustering_coefficient > random_clustering_coefficient1 and clustering_coefficient > random_clustering_coefficient2:
+        return "This network is Small-World"
     else:
         return "This network is neither Small-World nor Scale-Free"
 
@@ -160,126 +169,125 @@ def get_newman_communities():
 if __name__ == '__main__':
     app.run(port=5001)
 ##
-import networkx as nx
-import pymssql as pymssql
-import powerlaw
-
-errors = []
-
-
-def determine_network_type2(nodes, links):
-    # Create graph
-    G = nx.Graph()
-    for row in nodes:
-        try:
-            G.add_node(row[2], name=row[1])
-        except:
-            print("Failed in nodes")
-    for l in links:
-        try:
-            G.add_edge(l[0], l[1], strength=l[4])
-        except:
-            print("Failed in links")
-    # Get largest connected component
-    largest_cc = max(nx.connected_components(G), key=len)
-    # Create a subgraph containing only the largest connected component
-    G = G.subgraph(largest_cc)
-    avg_path_length = 0
-    try:
-    # Calculate average path length
-        avg_path_length = nx.average_shortest_path_length(G)
-    except:
-        raise Exception("Fuckkkk")
-    # Calculate clustering coefficient
-    clustering_coefficient = nx.average_clustering(G)
-
-    # Determine if it's a small-world network
-    degree_sequence = sorted([d for n, d in G.degree()], reverse=True)
-    if degree_sequence[1] == 1:
-        return "SF"
-
-    random_graph = nx.random_reference(G, niter=100, connectivity=False)
-    random_avg_path_length = nx.average_shortest_path_length(random_graph)
-    random_clustering_coefficient = nx.average_clustering(random_graph)
-
-    if avg_path_length < random_avg_path_length and clustering_coefficient >= random_clustering_coefficient:
-        return "SM"
-
-    # Determine if it's a scale-free network
-    fit = powerlaw.Fit(degree_sequence)
-    alpha = fit.alpha
-
-    if alpha > 2:
-        return "SF"
-    else:
-        return "NN"
-
-
-conn = pymssql.connect(server='Media.ruppin.ac.il', user='igroup101', password='igroup101_69556',
-                       database='igroup101_prod')
-
-cursor = conn.cursor()
-# Call the stored procedure
-stored_proc_name = 'spGetAllProducts'
-cursor.callproc(stored_proc_name)
-products = cursor.fetchall()
-
-conn = pymssql.connect(server='Media.ruppin.ac.il', user='igroup101', password='igroup101_69556',
-                       database='igroup101_prod')
-
-cursor = conn.cursor()
-# Call the stored procedure
-stored_proc_name = 'spGetAllCountries'
-cursor.callproc(stored_proc_name)
-countries = cursor.fetchall()
-
-for i in range(12, len(products)):
-    j = 1990
-    if i == 6:
-        j = 2021
-    for year in range(j, 2022):
-        param1 = year
-        param2 = products[i][0]
-        print(i + 1, "-", param1, param2)
-        conn = pymssql.connect(server='Media.ruppin.ac.il', user='igroup101', password='igroup101_69556',
-                               database='igroup101_prod')
-        cursor = conn.cursor()
-        stored_proc_name = 'spReadTradesByIndAndYear'
-
-        # Execute the stored procedure with the parameters
-        cursor.execute(f"EXEC {stored_proc_name} @ind=%s, @year=%s", (param2, param1))
-
-        # Fetch the results
-        trades = cursor.fetchall()
-        # Close the cursor and connection
-        cursor.close()
-        conn.close()
-        print(len(trades))
-        param3 = 1
-        try:
-            param3 = determine_network_type2(countries, trades)
-        except:
-            errors.append((param1, param2))
-            print("ERROR!", param1, param2)
-            year = year - 1
-            print(errors)
-            continue
-        print(param3)
-        conn = pymssql.connect(server='Media.ruppin.ac.il', user='igroup101', password='igroup101_69556',
-                               database='igroup101_prod')
-        cursor = conn.cursor()
-
-        # Execute the stored procedure with the parameters
-        cursor.execute(f"EXEC spInsertNetworkType @year=%s, @code=%s, @networkType=%s", (param1, param2, param3))
-
-        # Commit the changes (if necessary)
-        conn.commit()
-
-        # Close the cursor and connection
-        cursor.close()
-        conn.close()
-
-print(errors)
-
+# import networkx as nx
+# import pymssql as pymssql
+# import powerlaw
+#
+# errors = []
+#
+#
+# def determine_network_type2(nodes, links):
+#     # Create graph
+#     G = nx.Graph()
+#     for row in nodes:
+#         try:
+#             G.add_node(row[2], name=row[1])
+#         except:
+#             print("Failed in nodes")
+#     for l in links:
+#         try:
+#             G.add_edge(l[0], l[1], strength=l[4])
+#         except:
+#             print("Failed in links")
+#     # Get largest connected component
+#     largest_cc = max(nx.connected_components(G), key=len)
+#     # Create a subgraph containing only the largest connected component
+#     G = G.subgraph(largest_cc)
+#     avg_path_length = 0
+#     try:
+#     # Calculate average path length
+#         avg_path_length = nx.average_shortest_path_length(G)
+#     except:
+#         raise Exception()
+#     # Calculate clustering coefficient
+#     clustering_coefficient = nx.average_clustering(G)
+#
+#     # Determine if it's a scale-free network
+#     degree_sequence = sorted([d for n, d in G.degree()], reverse=True)
+#     if degree_sequence[1] == 1:
+#         return "SF"
+#
+#     fit = powerlaw.Fit(degree_sequence)
+#     alpha = fit.alpha
+#     if 4 > alpha > 2:
+#         return "SF"
+#
+#     # Determine if it's a small-world network
+#     random_graph = nx.random_reference(G, niter=100, connectivity=False)
+#     random_avg_path_length = nx.average_shortest_path_length(random_graph)
+#     random_clustering_coefficient = nx.average_clustering(random_graph)
+#
+#     if avg_path_length < random_avg_path_length and clustering_coefficient >= random_clustering_coefficient:
+#         return "SM"
+#     else:
+#         return "NN"
+#
+#
+# conn = pymssql.connect(server='Media.ruppin.ac.il', user='**', password='**',
+#                        database='**_prod')
+#
+# cursor = conn.cursor()
+# # Call the stored procedure
+# stored_proc_name = 'spGetAllProducts'
+# cursor.callproc(stored_proc_name)
+# products = cursor.fetchall()
+#
+# conn = pymssql.connect(server='Media.ruppin.ac.il', user='**', password='**',
+#                        database='igroup101_prod')
+#
+# cursor = conn.cursor()
+# # Call the stored procedure
+# stored_proc_name = 'spGetAllCountries'
+# cursor.callproc(stored_proc_name)
+# countries = cursor.fetchall()
+#
+# for i in range(12, len(products)):
+#     j = 1990
+#     if i == 6:
+#         j = 2021
+#     for year in range(j, 2022):
+#         param1 = year
+#         param2 = products[i][0]
+#         print(i + 1, "-", param1, param2)
+#         conn = pymssql.connect(server='Media.ruppin.ac.il', user='**', password='**',
+#                                database='**_prod')
+#         cursor = conn.cursor()
+#         stored_proc_name = 'spReadTradesByIndAndYear'
+#
+#         # Execute the stored procedure with the parameters
+#         cursor.execute(f"EXEC {stored_proc_name} @ind=%s, @year=%s", (param2, param1))
+#
+#         # Fetch the results
+#         trades = cursor.fetchall()
+#         # Close the cursor and connection
+#         cursor.close()
+#         conn.close()
+#         print(len(trades))
+#         param3 = 1
+#         try:
+#             param3 = determine_network_type2(countries, trades)
+#         except:
+#             errors.append((param1, param2))
+#             print("ERROR!", param1, param2)
+#             year = year - 1
+#             print(errors)
+#             continue
+#         print(param3)
+#         conn = pymssql.connect(server='Media.ruppin.ac.il', user='igroup101', password='igroup101_69556',
+#                                database='igroup101_prod')
+#         cursor = conn.cursor()
+#
+#         # Execute the stored procedure with the parameters
+#         cursor.execute(f"EXEC spInsertNetworkType @year=%s, @code=%s, @networkType=%s", (param1, param2, param3))
+#
+#         # Commit the changes (if necessary)
+#         conn.commit()
+#
+#         # Close the cursor and connection
+#         cursor.close()
+#         conn.close()
+#
+# print(errors)
+#
 
 ##
